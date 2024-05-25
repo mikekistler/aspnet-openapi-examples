@@ -4,6 +4,11 @@ Examples of using ASP.NET to create OpenAPI v3 API definitions
 
 ## Data Types
 
+The JSON Schema library maps standard C# types to OpenAPI `type` and `format` as follows:
+
+C# Type | OpenAPI `type` | OpenAPI `format` | Notes
+------- | -------------- | ---------------- | --------
+
 ### type and format
 
 ### Schema assertions
