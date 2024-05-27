@@ -1,6 +1,6 @@
 # aspnet-openapi-examples
 
-<!-- cspell:ignore aspnet openapi -->
+<!-- cspell:ignore aspnet openapi swashbuckle -->
 
 Examples of using Swashbuckle and ASP.NET to create OpenAPI v3 API definitions.
 
@@ -18,6 +18,21 @@ on using Swashbuckle for more information.
 [XML Comments]: https://learn.microsoft.com/en-us/aspnet/core/tutorials/getting-started-with-swashbuckle?view=aspnetcore-8.0&tabs=visual-studio#xml-comments
 
 ## Schemas
+
+C# classes or records used in request or response bodies are represented as schemas
+in the generated OpenAPI document.
+
+### properties
+
+By default, only public properties are represented in the schema.
+
+### property names
+
+Swashbuckle converts C# property names to lower camel-case in the generated schema.
+There may be an option to configure a different naming strategy, but if not this could be
+done with a [schema filter].
+
+[schema filter]: https://github.com/domaindrivendev/Swashbuckle.AspNetCore?tab=readme-ov-file#schema-filters
 
 ### type and format
 
@@ -47,13 +62,55 @@ For example, to change the mapping of `DateTimeOnly` to `type: string, format: d
 c.MapType<DateOnly>(() => new OpenApiSchema { Type = "string", Format = "date" });
 ```
 
-### enum
+### description
+
+Use the [`summary` tag] in XML comments to set the `description` of a property.
+
+[`summary` tag]: https://learn.microsoft.com/dotnet/csharp/language-reference/xmldoc/recommended-tags#summary
 
 ### required
 
+Properties with either the [required modifier] or the [Required attribute] are required in the generated schema.
+
+[required modifier]: https://learn.microsoft.com/dotnet/csharp/language-reference/proposals/csharp-11.0/required-members#required-modifier
+[Required attribute]: https://learn.microsoft.com/dotnet/api/system.componentmodel.dataannotations.requiredattribute
+
 ### default
 
-### Schema assertions
+Properties with a default value do _not_ have a default in the generated schema.
+
+Properties with the [`DefaultValue` attribute] have a default in the generated schema.
+
+[`DefaultValue` attribute]: https://learn.microsoft.com/dotnet/api/system.componentmodel.defaultvalueattribute
+
+### minimum and maximum
+
+Use the [`Range` attribute] to set the `minimum` and `maximum` values of an `integer`, or `number`.
+
+[`Range` attribute]: https://learn.microsoft.com/dotnet/api/system.componentmodel.dataannotations.rangeattribute
+
+From the docs, it looks like it should be possible to use `Range` with `DateTimeOffset` properties, but it doesn't seem to work.
+
+Also, there does not seem to be a way to produce just `minimum` or `maximum` without the other.
+
+### minLength and maxLength
+
+Use the [`MinLength` attribute] and [`MaxLength` attribute] to set the `minLength` and `maxLength` of a `string`.
+
+[`MinLength` attribute]: https://learn.microsoft.com/dotnet/api/system.componentmodel.dataannotations.minlengthattribute
+[`MaxLength` attribute]: https://learn.microsoft.com/dotnet/api/system.componentmodel.dataannotations.maxlengthattribute
+
+### pattern
+
+Use the [`RegularExpression` attribute] to set the `pattern` of a `string`.
+
+[`RegularExpression` attribute]: https://learn.microsoft.com/dotnet/api/system.componentmodel.dataannotations.regularexpressionattribute
+
+### example / examples
+
+### nullable
+
+Swashbuckle defines all strings as `nullable: true`, whether or not they are C# nullable.
 
 ## Info / Servers
 

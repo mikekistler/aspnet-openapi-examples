@@ -41,5 +41,6 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.MapDataTypes();
+app.MapSchemas();
 
 app.Run();
