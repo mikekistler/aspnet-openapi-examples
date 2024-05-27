@@ -21,5 +21,6 @@ var app = builder.Build();
 app.UseHttpsRedirection();
 
 app.MapDataTypes();
+app.MapSchemas();
 
 app.Run();
