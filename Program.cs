@@ -17,6 +17,9 @@ builder.Services.AddSwaggerGen(c =>
     // Customize generation of DateOnly and TimeOnly types
     c.MapType<DateOnly>(() => new OpenApiSchema { Type = "string", Format = "date" });
     c.MapType<TimeOnly>(() => new OpenApiSchema { Type = "string", Format = "time" });
+
+    // Use a document filter to add a description and contact info
+    c.DocumentFilter<InfoFilter>();
 });
 
 builder.Services.ConfigureHttpJsonOptions(options =>

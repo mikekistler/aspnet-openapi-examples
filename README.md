@@ -112,7 +112,20 @@ Use the [`RegularExpression` attribute] to set the `pattern` of a `string`.
 
 Swashbuckle defines all strings as `nullable: true`, whether or not they are C# nullable.
 
-## Info / Servers
+## Info
+
+You can add or replace content in the Info section with a [Document Filter]. Within your filter code,
+set fields in the `document.Info` property.
+
+Swashbuckle automatically fills in the `Title` and `Version`. There are also `Contact`, `Licence`, and `Description` fields.
+The `Info.Description` and most other description fields in OpenAPI v3.x support [CommonMark] markdown content.
+
+[CommonMark]: https://spec.commonmark.org/
+
+The Info model and most of the OpenApi model classes contain an "Extensions" property where you can set
+specification extensions.
+
+## Servers
 
 ## Paths Object
 
@@ -165,3 +178,6 @@ Swashbuckle defines all strings as `nullable: true`, whether or not they are C# 
 ## securityDefinitions / securitySchemes
 
 ## Specification Extensions
+
+<!-- Links -->
+[Document Filter]: https://github.com/domaindrivendev/Swashbuckle.AspNetCore?tab=readme-ov-file#document-filters
