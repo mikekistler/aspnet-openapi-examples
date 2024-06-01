@@ -89,6 +89,9 @@ specification extensions.
 
 ## Servers
 
+You can set entries in the servers property with a [DocumentTransformer]. Within your transformer code,
+set or add entries to the `document.Servers` property.
+
 ## Paths Object
 
 ## Path Item Object
