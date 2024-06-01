@@ -74,7 +74,20 @@ Use the [`RegularExpression` attribute] to set the `pattern` of a `string`.
 
 Properties defined as a nullable value type will have `"nullable": true` in the generated schema.
 
-## Info / Servers
+## Info
+
+You can add or replace content in the Info section with a [DocumentTransformer]. Within your transformer code,
+set fields in the `document.Info` property.
+
+.NET automatically fills in the `Title` and `Version`. There are also `Contact`, `Licence`, and `Description` fields.
+The `Info.Description` and most other description fields in OpenAPI v3.x support [CommonMark] markdown content.
+
+[CommonMark]: https://spec.commonmark.org/
+
+The Info model and most of the OpenApi model classes contain an "Extensions" property where you can set
+specification extensions.
+
+## Servers
 
 ## Paths Object
 

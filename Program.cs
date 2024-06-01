@@ -14,7 +14,9 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 // ref: https://learn.microsoft.com/en-us/aspnet/core/fundamentals/error-handling#problem-details
 builder.Services.AddProblemDetails();
 
-builder.Services.AddOpenApi();
+builder.Services.AddOpenApi(options => {
+    options.UseTransformer<InfoTransformer>();
+});
 
 var app = builder.Build();
 
