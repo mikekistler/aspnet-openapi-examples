@@ -2,7 +2,11 @@
 
 <!-- cspell:ignore aspnet openapi -->
 
-Examples of using ASP.NET to create OpenAPI v3 API definitions
+Examples of using ASP.NET to create OpenAPI v3 API definitions.
+
+This guide focuses on generating OpenAPI from a Minimal APIs ASP.NET application.
+It is also possible to generate OpenAPI for controller-based applications, but
+some details will vary from the information below.
 
 ## Schemas
 
@@ -94,7 +98,18 @@ set or add entries to the `document.Servers` property.
 
 ## Paths Object
 
+The `paths` object is just a map of path to `pathItem`. ASP.NET creates an entry in this map for every path
+specified in a Map[Get,Put,Post,Delete,Patch] method.
+
+OpenAPI allows specification extensions in a `paths` object -- these can be added with a [DocumentTransformer].
+
 ## Path Item Object
+
+The `get`, `put`, `post`, `delete`, and `patch` fields of a `pathItem` can be set with the corresponding
+ASP.NET Map[Get,Put,Post,Delete,Patch] method.
+
+Use a [DocumentTransformer] to set the `summary`, `description`, `options`, `head`, `trace`, `servers`, or
+`parameters` fields, or to add specification extensions.
 
 ## Operation Object
 
