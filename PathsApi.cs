@@ -4,7 +4,7 @@ internal static class PathsApi
 {
     public static RouteGroupBuilder MapPaths(this IEndpointRouteBuilder routes)
     {
-        var group = routes.MapGroup("/Paths/{id}");
+        var group = routes.MapGroup("/paths/{id}");
 
         group.WithTags("Paths");
 

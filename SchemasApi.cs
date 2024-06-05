@@ -4,7 +4,7 @@ internal static class SchemasApi
 {
     public static RouteGroupBuilder MapSchemas(this IEndpointRouteBuilder routes)
     {
-        var group = routes.MapGroup("/Schemas");
+        var group = routes.MapGroup("/schemas");
 
         group.WithTags("Schemas");
 

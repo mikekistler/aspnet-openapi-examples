@@ -5,7 +5,7 @@ internal static class DataTypesApi
 {
     public static RouteGroupBuilder MapDataTypes(this IEndpointRouteBuilder routes)
     {
-        var group = routes.MapGroup("/DataTypes");
+        var group = routes.MapGroup("/data-types");
 
         group.WithTags("DataTypes");
 

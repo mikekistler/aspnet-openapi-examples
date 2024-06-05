@@ -113,13 +113,36 @@ Use a [DocumentTransformer] to set the `summary`, `description`, `options`, `hea
 
 ## Operation Object
 
-### tag
+Each Map[Get,Put,Post,Delete,Patch] method invocation will create an operation. The following operation properties
+can be set using attributes or extension methods:
 
-### description and summary
+| to set property | use extension method | or attribute | 
+| --------------- | --- | ----|
+| summary | WithSummary | `[EndpointSummary()]` |
+| description | WithDescription | `[EndpointDescription()]` |
+| operationId | WithName | `[EndpointName()]` |
+| tags | WithTags | |
 
-### externalDocs
+Note that the extension methods are supported on both `RouteHandlerBuilder` and on `RouteGroupBuilder`,
+but when used on `RouteGroupBuilder` they are applied to all operations in the group,
+so it's not likely that `WithSummary`, `WithDescription`, or `WithName` should be used on a `RouteGroupBuilder`.
 
-### operationId
+The `parameters` property of an operation is set from the parameters of the delegate method.
+Delegate method parameters that are explicitly or implicitly `[FromQuery]`, `[FromPath]`, or `[FromHeader]`
+are included in the parameter list.
+
+If there is a delegate method parameter that is explicitly or implicitly `[FromBody]`, this is used
+to set the `requestBody` property of the operation.
+
+The `responses` object is populated from several sources.
+- the declared return value of the delegate method
+- the value(s) returned from the delegate method
+- the `Produces` extension method on the delegate.
+
+See the [Responses] section below for details on how to set `responses`.
+
+Use a [DocumentTransformer] or an [OperationTransformer] to set the `externalDocs`, `callbacks`, `deprecated`, `security`,
+or `servers` properties of an operation.
 
 ## Parameters / Parameter Object
 
