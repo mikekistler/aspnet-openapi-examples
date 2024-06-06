@@ -10,6 +10,23 @@ some details will vary from the information below.
 
 ## Schemas
 
+C# classes or records used in request or response bodies are represented as schemas
+in the generated OpenAPI document.
+
+### properties
+
+By default, only public properties are represented in the schema, but there are [JsonSerializerOptions]
+to also create schema properties for fields. 
+
+### property names
+
+By default in a .NET web application, property names in a schema are the camel-case form
+of the class or record property name. This can be changed using the `PropertyNamigPolicy` in the
+[JsonSerializerOptions], and can be changed on an individual property with the the 
+[`JsonPropertyName`] attribute.
+
+[`JsonPropertyName`]: https://docs.microsoft.com/dotnet/api/system.text.json.serialization.jsonpropertynameattribute?view=net-9.0
+
 ### type and format
 
 The JSON Schema library maps standard C# types to OpenAPI `type` and `format` as follows:
@@ -39,6 +56,8 @@ Use the [`Description` attribute] to set the `description` of a property.
 ### required
 
 Properties with the [required modifier] are required in the generated schema.
+
+Required properties in a record constructor are also required in the generated schema.
 
 Properties with the [Required attribute] are _not_ required in the generated schema.
 
@@ -146,11 +165,50 @@ or `servers` properties of an operation.
 
 ## Parameters / Parameter Object
 
-### style and explode
+Delegate method parameters that are explicitly or implicitly `[FromQuery]`, `[FromPath]`, or `[FromHeader]`
+are included in the parameter list, with the `in` value set accordingly and a schema as described in the [Schemas] section above.
+
+### name
+
+The name of the parameter in the delegate method is used as-is in the `name` field of the parameter object --
+no case-convention is applied -- but an alternate can be specified in the parameters of the `From{Query,Path,Header}`
+attribute.
+
+### description
+
+Currently you need to use a [DocumentTransformer] or an [OperationTransformer] to set the `description` on a parameter --
+the `[Description]` attribute sets the description in the schema but not on the parameter itself.
+
+Unfortunately, some tools e.g. SwaggerUi only use the description in the parameter and ignore the one in the parameter schema.
+
+### required
+
+The `required` property of a parameter is determined by its type:
+- a non-nullable value type parameter is marked as `required: true`
+- a nullable value type parameter is implicitly `required: false`
+- a non-nullable reference type parameter is marked as `required: true`
+- a nullable reference type parameter is implicitly `required: false`
+
+Note this differs from the way properties of a schema are determined to be required.
+
+### schema
+
+The `schema` property of a parameter object is set as described in the [Schemas] section above.
+
+### other properties
+
+The `deprecated`, `allowEmptyValue`,`style`, `explode`, `allowReserved`, `example`, and `examples`
+properties are not currently included in parameter objects. 
+Use a [DocumentTransformer] or an [OperationTransformer] to set any of these properties when needed.
 
 ## Request Body Object
 
-### Mime Type
+If there is a delegate method parameter that is explicitly or implicitly `[FromBody]`, this is used
+to set the `requestBody` property of the operation. By default the MIME type of the request body is
+`application/json`, but this can be changed with the `Accepts` extension method on the delegate method.
+Use `Accepts` if you need to specify multiple MIME types.
+
+Note that if you specify `Accepts` multiple times, only the last one will be used -- they are not combined.
 
 ### multipart/form-data
 
@@ -181,3 +239,9 @@ or `servers` properties of an operation.
 ## securityDefinitions / securitySchemes
 
 ## Specification Extensions
+
+<!-- Links -->
+
+[DocumentTransformer]: https://learn.microsoft.com/aspnet/core/fundamentals/minimal-apis/aspnetcore-openapi?view=aspnetcore-9.0#openapi-document-transformers
+[OperationTransformer]: https://learn.microsoft.com/aspnet/core/fundamentals/minimal-apis/aspnetcore-openapi?view=aspnetcore-9.0#use-operation-transformers
+[JsonSerializerOptions]: https://docs.microsoft.com/dotnet/api/system.text.json.jsonserializeroptions?view=net-9.0

@@ -1,9 +1,16 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.CompilerServices;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor.
 public class Schemas
 {
+    // Internal properties are not included in the generated schema properties
+    internal string Internal { get; set; }
+
+    // By default, class fields are not included in the generated schema properties
+    string Field;
+
     [Description("Properties with the Description attribute have a description in the generated schema")]
     public string Description { get; set; }
 
@@ -41,6 +48,26 @@ public class Schemas
     public string StringWithPattern { get; set; }
 
     public string? NullableString { get; set; }
+
+    [Description("Nested schema")]
+    public Nested Inner { get; set; }
 }
+
+public record Nested(
+    [Description("this is a date")]
+    DateOnly Date,
+
+    [Description("Temp in Celcius")]
+    [Range(0, 100)]
+    int TemperatureC,
+
+    [MinLength(1)]
+    [MaxLength(63)]
+    string? Summary)
+{
+    [Description("Temp in Farenheit")]
+    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+}
+
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 

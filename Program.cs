@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 using Microsoft.OpenApi.Models;
+using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,11 +36,18 @@ builder.Services.AddOpenApi(options => {
 
 var app = builder.Build();
 
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi();
+    app.MapScalarApiReference();
+}
+
 app.UseHttpsRedirection();
 
 app.MapDataTypes();
 app.MapSchemas();
 app.MapPaths();
 app.MapOperations();
+app.MapRequestBodies();
 
 app.Run();
