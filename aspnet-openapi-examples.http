@@ -1,0 +1,6 @@
+@aspnet_openapi_examples_HostAddress = http://localhost:5053
+
+GET {{aspnet_openapi_examples_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
