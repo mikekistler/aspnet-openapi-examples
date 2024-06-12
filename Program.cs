@@ -43,11 +43,13 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseStatusCodePages();
 
 app.MapDataTypes();
 app.MapSchemas();
 app.MapPaths();
 app.MapOperations();
 app.MapRequestBodies();
+app.MapResponses();
 
 app.Run();

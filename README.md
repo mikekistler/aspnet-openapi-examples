@@ -4,9 +4,12 @@
 
 Examples of using ASP.NET to create OpenAPI v3 API definitions.
 
-This guide focuses on generating OpenAPI from a Minimal APIs ASP.NET application.
+This guide focuses on generating OpenAPI, specifically [OpenAPI v3.0.x], from
+a Minimal APIs ASP.NET application.
 It is also possible to generate OpenAPI for controller-based applications, but
 some details will vary from the information below.
+
+[OpenAPI v3.0.x]: https://github.com/OAI/OpenAPI-Specification/blob/3.0.3/versions/3.0.3.md
 
 ## Schemas
 
@@ -212,11 +215,70 @@ Note that if you specify `Accepts` multiple times, only the last one will be use
 
 ### multipart/form-data
 
+An operation that accepts "multipart/form-data" should use `Accepts` to set the correct MIME type and
+a `FromBody` method parameter with a type that defines the form-data fields.
+
+### mediaTypeObject
+
+The `content` property of the `requestBody` object is a map of MIME type to `mediaTypeObject`.
+The `schema` property of a `mediaTypeObject` is set as described above.
+
+Use a [DocumentTransformer] or an [OperationTransformer] to set the `example`, `examples`, `encoding`, or
+to add specification extensions to the `mediaTypeObject`.
+
 ## Responses
 
-## Response Object
+Response definitions can set using any of the following approaches:
+- a `Produces` extension method on the endpoint
+- a `ProducesResponseType` attribute on the route handler
+- by returning `TypedResults` from the route handler
 
-## Schema Object
+See [Describe response types] in the .NET documentation for more information.
+
+[Describe response types]: https://learn.microsoft.com/aspnet/core/fundamentals/minimal-apis/openapi?view=aspnetcore-9.0#describe-response-types]
+
+These approaches will set a numeric `statusCode`, the response MIME type (defaults to "applicaiton/json"),
+and schema of the response object.
+Use a [DocumentTransformer] or an [OperationTransformer] to define a response with a non-numeric status code,
+such as "default" or "4xx".
+The response `description` (which is required) is set to a standard value based on the status code,
+but can be overridden with a transformer.
+
+For the `Produces` extension method and `ProducesResponseType` attribute, 
+there is no validation of the type specified against the actual response object returned
+from the delegate method.
+
+When using `TypedResults`, the response type can be inferred from the return type of the delegate method,
+but only if there is a single return type. If there are multiple return types, you have to explicitly set
+the return type on the handler. This is because the compiler cannot infer the delegate type. For more information see the
+[.NET docs on Learn](https://learn.microsoft.com/aspnet/core/fundamentals/minimal-apis/responses#typedresults-vs-results).
+
+To return a typed ProlblemDetails response with the StatusCodePages middleware, pass `null` to the `TypedResults`
+helper method -- this sets the body to `null` which will trigger the middleware to add a ProblemDetails response body.
+
+Currently only a subset of the `TypedResults` helper methods add endpoint metadata to the OpenAPI document.
+
+
+
+Use a transformer to set the `headers`, `links`, or to add specification extensions to the response object.
+
+#### File responses
+
+https://github.com/dotnet/aspnetcore/issues/34544#issuecomment-2148434850
+
+
+
+### content
+
+You can create multiple `mediaTypeObject` entries in the `content` property of a response object
+by specifying all the media types in the `Produces` extension method on the endpoint.
+However, each of these `mediaTypeObject` entries will have the same schema, so if you need different
+schemas for different media types, you will need to use a transformer.
+
+Use a transformer to set the `example`, `examples`, `encoding`, or
+to add specification extensions to any `mediaTypeObject` within the `content` of the response.
+
+## More schema fields
 
 ### additionalProperties
 

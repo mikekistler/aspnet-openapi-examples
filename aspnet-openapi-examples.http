@@ -1,12 +1,19 @@
-@aspnet_openapi_examples_HostAddress = http://localhost:5159
+@HostAddress = http://localhost:5159
 
-GET {{aspnet_openapi_examples_HostAddress}}/weatherforecast/
+GET {{HostAddress}}/responses/42/with-typed-results
 Accept: application/json
 
-###
+### Get should return 404
 
-POST {{aspnet_openapi_examples_HostAddress}}/operations/1?q=1
-header: 1
-Content-Type: application/json
+GET {{HostAddress}}/responses/999/with-typed-results
+Accept: application/json
 
-"body"
+### PATCH should return 405
+
+PATCH {{HostAddress}}/responses/42/with-typed-results
+Accept: application/json
+
+
+### PUT returns 400
+
+PUT {{HostAddress}}/responses/42/with-typed-results
