@@ -13,6 +13,7 @@ builder.Services.AddSwaggerGen(c =>
     var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
     c.IncludeXmlComments(xmlPath);
+    c.EnableAnnotations();
 
     // Customize generation of DateOnly and TimeOnly types
     c.MapType<DateOnly>(() => new OpenApiSchema { Type = "string", Format = "date" });
@@ -51,5 +52,6 @@ app.UseHttpsRedirection();
 app.MapDataTypes();
 app.MapSchemas();
 app.MapPaths();
+app.MapOperations();
 
 app.Run();

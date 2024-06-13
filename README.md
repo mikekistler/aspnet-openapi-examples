@@ -148,15 +148,68 @@ Use a [Document Filter] to set the `summary`, `description`, `options`, `head`, 
 
 ## Operation Object
 
-### tag
+Each Map[Get,Put,Post,Delete,Patch] method invocation will create an operation. The following operation properties
+can be set using attributes or extension methods:
 
-### description and summary
+| to set property | use extension method | or attribute |
+| --------------- | -------------------- | ------------ |
+| summary         | WithSummary          | `[EndpointSummary()]` |
+| description     | WithDescription      | `[EndpointDescription()]` |
+| operationId     | WithName             | `[EndpointName()]` |
+| tags            | WithTags             | |
 
-### externalDocs
+Note that the extension methods are supported on both `RouteHandlerBuilder` and on `RouteGroupBuilder`,
+but when used on `RouteGroupBuilder` they are applied to all operations in the group,
+so it's not likely that `WithSummary`, `WithDescription`, or `WithName` should be used on a `RouteGroupBuilder`.
 
-### operationId
+The `parameters` property of an operation is set from the parameters of the delegate method.
+Delegate method parameters that are explicitly or implicitly `[FromQuery]`, `[FromPath]`, or `[FromHeader]`
+are included in the parameter list.
+
+If there is a delegate method parameter that is explicitly or implicitly `[FromBody]`, this is used
+to set the `requestBody` property of the operation.
+
+The `responses` object is populated from several sources.
+
+- the declared return value of the delegate method
+- the value(s) returned from the delegate method
+- the `Produces` extension method on the delegate.
+
+See the [Responses] section below for details on how to set `responses`.
+
+Use a [Document Filter] or an [Operation Filter] to set the `externalDocs`, `callbacks`, `deprecated`, `security`,
+or `servers` properties of an operation.
 
 ## Parameters / Parameter Object
+
+Delegate method parameters that are explicitly or implicitly `[FromQuery]`, `[FromPath]`, or `[FromHeader]`
+are included in the parameter list, with the `in` value set accordingly and a schema as described in the [Schemas] section above.
+
+### name
+
+The name of the parameter in the delegate method is used as-is in the `name` field of the parameter object --
+no case-convention is applied -- but an alternate can be specified in the parameters of the `From{Query,Path,Header}`
+attribute.
+
+### description
+
+Unfortunately there appears to be no simple means to add a description to a parameter operation parameters.
+Neither the `[Description]` attribute nor xml comments seem to work.
+
+However there is the fallback of using a [Document Filter] or an [Operation Filter] to set the `description` property.
+
+### required
+
+The `required` property of a parameter is determined by its nullability:
+
+- a non-nullable parameter is marked as `required: true`
+- a nullable parameter is implicitly `required: false`
+
+### other properties
+
+The `deprecated`, `allowEmptyValue`,`style`, `explode`, `allowReserved`, `example`, and `examples`
+properties are not currently included in parameter objects.
+Use a [Document Filter] or an [Operation Filter] to set any of these properties when needed.
 
 ### style and explode
 
@@ -196,3 +249,4 @@ Use a [Document Filter] to set the `summary`, `description`, `options`, `head`, 
 
 <!-- Links -->
 [Document Filter]: https://github.com/domaindrivendev/Swashbuckle.AspNetCore?tab=readme-ov-file#document-filters
+[Operation Filter]: https://github.com/domaindrivendev/Swashbuckle.AspNetCore?tab=readme-ov-file#operation-filters
