@@ -20,6 +20,11 @@ builder.Services.AddSwaggerGen(c =>
 
     // Use a document filter to add a description and contact info
     c.DocumentFilter<InfoFilter>();
+
+    // Add servers to the OpenAPI document
+    // Note: the GetSetting trick does not work for build-time OpenAPI generation with Swashbuckle
+    var serverUrl = builder.WebHost.GetSetting(WebHostDefaults.ServerUrlsKey) ?? "https://localhost:5001";
+    c.AddServer(new OpenApiServer { Url = serverUrl, Description = "Local development server"});
 });
 
 builder.Services.ConfigureHttpJsonOptions(options =>

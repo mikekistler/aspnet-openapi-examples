@@ -127,6 +127,8 @@ specification extensions.
 
 ## Servers
 
+You can set entries in the servers property with the `AddServer` method on the `AddSwaggerGen` options.
+
 ## Paths Object
 
 ## Path Item Object

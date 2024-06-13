@@ -1,6 +1,5 @@
 extends: spectral:oas
 rules:
-  oas3-api-servers: off
   operation-description: off
   operation-operationId: off
   operation-tag-defined: off
