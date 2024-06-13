@@ -131,7 +131,20 @@ You can set entries in the servers property with the `AddServer` method on the `
 
 ## Paths Object
 
+The `paths` object is just a map of path to `pathItem`. Swashbuckle creates an entry in this map for every path
+specified in a Map[Get,Put,Post,Delete,Patch] method.
+
+Swashbuckle generates the `paths` object in alphabetical order by tags.
+
+OpenAPI allows specification extensions in a `paths` object -- these can be added with a [Document Filter].
+
 ## Path Item Object
+
+The `get`, `put`, `post`, `delete`, and `patch` fields of a `pathItem` can be set with the corresponding
+ASP.NET Map[Get,Put,Post,Delete,Patch] method.
+
+Use a [Document Filter] to set the `summary`, `description`, `options`, `head`, `trace`, `servers`, or
+`parameters` fields, or to add specification extensions.
 
 ## Operation Object
 

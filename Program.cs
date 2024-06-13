@@ -50,5 +50,6 @@ app.UseHttpsRedirection();
 
 app.MapDataTypes();
 app.MapSchemas();
+app.MapPaths();
 
 app.Run();
