@@ -78,12 +78,19 @@ Use the [`summary` tag] in XML comments to set the `description` of a property.
 
 Properties with either the [required modifier] or the [Required attribute] are required in the generated schema.
 
+Required properties in a record constructor are also required in the generated schema.
+
 [required modifier]: https://learn.microsoft.com/dotnet/csharp/language-reference/proposals/csharp-11.0/required-members#required-modifier
 [Required attribute]: https://learn.microsoft.com/dotnet/api/system.componentmodel.dataannotations.requiredattribute
 
 ### default
 
-Properties with a default value do _not_ have a default in the generated schema.
+<!-- Support added in PR #56219 (preview6) -->
+Use the [`DefaultValue` attribute] to set the `default` value of a property in the schema.
+
+Note that properties with a default value do _not_ have a default in the generated schema.
+
+[`DefaultValue` attribute]: https://learn.microsoft.com/dotnet/api/system.componentmodel.defaultvalueattribute
 
 Properties with the [`DefaultValue` attribute] have a default in the generated schema.
 
@@ -218,7 +225,7 @@ are included in the parameter list, with the `in` value set accordingly and a sc
 ### name
 
 The name of the parameter in the delegate method is used as-is in the `name` field of the parameter object --
-no case-convention is applied -- but an alternate can be specified in the parameters of the `From{Query,Path,Header}`
+no case-convention is applied -- but an alternate name can be specified in the parameters of the `From{Query,Path,Header}`
 attribute.
 
 ### description
@@ -281,7 +288,7 @@ to add specification extensions to the `mediaTypeObject`.
 Response definitions can set using any of the following approaches:
 - a `Produces` extension method on the endpoint
 - a `ProducesResponseType` attribute on the route handler
-- by returning `TypedResults` from the route handler
+- define the route handler return type to be one or more `TypedResults`
 
 See [Describe response types] in the .NET documentation for more information.
 
@@ -290,7 +297,7 @@ See [Describe response types] in the .NET documentation for more information.
 These approaches will set a numeric `statusCode`, the response MIME type (defaults to "applicaiton/json"),
 and schema of the response object.
 Use a [DocumentTransformer] or an [OperationTransformer] to define a response with a non-numeric status code,
-such as "default" or "4xx".
+such as "default" or "4XX".
 The response `description` (which is required) is set to a standard value based on the status code,
 but can be overridden with a transformer.
 
@@ -298,17 +305,44 @@ For the `Produces` extension method and `ProducesResponseType` attribute,
 there is no validation of the type specified against the actual response object returned
 from the delegate method.
 
-When using `TypedResults`, the response type can be inferred from the return type of the delegate method,
-but only if there is a single return type. If there are multiple return types, you have to explicitly set
-the return type on the handler. This is because the compiler cannot infer the delegate type. For more information see the
+If the endpoint method returns typed results, most commonly using the `TypedResults` helper methods,
+the response type may be inferred from the return type of the delegate method.
+If the method returns a single result type, the return type does not need to be defined explicitly,
+because it can be inferred by the compiler, but if there are multiple return types, you have to explicitly define
+the return type on the handler using [`Results`]. For more information see the
 [.NET docs on Learn](https://learn.microsoft.com/aspnet/core/fundamentals/minimal-apis/responses#typedresults-vs-results).
+
+[`Results`]: https://learn.microsoft.com/aspnet/core/fundamentals/minimal-apis/responses?view=aspnetcore-9.0#resultstresult1-tresultn
+
+Note that `Results` only supports from 2 to 6 different return types. Don't use `Results` with a single return type --
+it will fail to compile. Likewise, if you try to specify more than 6 return types, it will fail to compile.
+
+When the endpoint method is asynchronous, the return type must have the `Task<>` wrapper.
+
+Only `TypedResults` helper methods that return a class that implements `IEndpointMetadataProvider` will create
+a `responses` entry in the OpenAPI document. Here's a quick list of some of the `TypedResults` helper methods
+that produce a `responses` entry:
+
+| TypedResults helper method | status code |
+| -------------------------- | ----------- |
+| Ok()                       | 200         |
+| Created()                  | 201         |
+| CreatedAtRoute()           | 201         |
+| Accepted()                 | 202         |
+| AcceptedAtRoute()          | 202         |
+| NoContent()                | 204         |
+| BadRequest()               | 400         |
+| ValidationProblem()        | 400         |
+| NotFound()                 | 404         |
+| Conflict()                 | 409         |
+| UnprocessableEntity()      | 422         |
+
+All of these methods except `NoContent` have a generic overload that allows you to specify the response body.
+
+Note that the `CreatedAtRoute` and `AcceptedAtRoute` methods do not set the `Location` header in the response object.
 
 To return a typed ProlblemDetails response with the StatusCodePages middleware, pass `null` to the `TypedResults`
 helper method -- this sets the body to `null` which will trigger the middleware to add a ProblemDetails response body.
-
-Currently only a subset of the `TypedResults` helper methods add endpoint metadata to the OpenAPI document.
-
-
 
 Use a transformer to set the `headers`, `links`, or to add specification extensions to the response object.
 

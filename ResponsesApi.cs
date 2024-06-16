@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Http.Metadata;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -68,6 +69,101 @@ internal static class ResponsesApi
             // Pass null so that the StatusCodePagesMiddleware will generate a problem details response
             return TypedResults.NotFound<ProblemDetails>(null);
         });
+
+        group.MapGet("/todos/{id}", Results<Ok<Todo>, NotFound<ProblemDetails>> (int id) =>
+        {
+            if (id <= 99)
+            {
+                return TypedResults.Ok(new Todo { Id = id, Title = $"Todo {id}" });
+            }
+            // Pass null so that the StatusCodePagesMiddleware will generate a problem details response
+            return TypedResults.NotFound<ProblemDetails>(null);
+        })
+            .WithName("GetTodo");
+
+        // Using the TypedResults helper
+        group.MapPost("/success-typed-results", Results<Ok<Todo>, CreatedAtRoute<Todo>, AcceptedAtRoute<Todo>, NoContent,
+            BadRequest<ProblemDetails>, NotFound<ProblemDetails>>
+        (
+            int v
+        ) =>
+        {
+            var todo = new Todo { Id = 1, Title = "Todo 1" };
+            var routeValues = new Dictionary<string, int>
+            {
+                { "id", todo.Id }
+            };
+            switch (v)
+            {
+                case 200:
+                    return TypedResults.Ok(todo);
+                case 201:
+                    return TypedResults.CreatedAtRoute(todo, "GetTodo", routeValues);
+                case 202:
+                    return TypedResults.AcceptedAtRoute(todo, "GetTodo", routeValues);
+                case 204:
+                    return TypedResults.NoContent();
+                case 400:
+                    return TypedResults.BadRequest<ProblemDetails>(null);
+                default:
+                    return TypedResults.NotFound<ProblemDetails>(null);
+            }
+        });
+
+        // Using the TypedResults helper
+        group.MapPost("/error-typed-results",
+            Results<Ok<Todo>, NoContent, BadRequest<ProblemDetails>, NotFound<ProblemDetails>,
+            Conflict<ProblemDetails>, UnprocessableEntity<ProblemDetails>>
+        (
+            int v
+        ) =>
+        {
+            var todo = new Todo { Id = 1, Title = "Todo 1" };
+            var routeValues = new Dictionary<string, int>
+            {
+                { "id", todo.Id }
+            };
+            switch (v)
+            {
+                case 200:
+                    return TypedResults.Ok(todo);
+                case 400:
+                    return TypedResults.BadRequest<ProblemDetails>(null);
+                case 404:
+                    return TypedResults.NotFound<ProblemDetails>(null);
+                case 409:
+                    return TypedResults.Conflict<ProblemDetails>(null);
+                case 422:
+                    return TypedResults.UnprocessableEntity<ProblemDetails>(null);
+                default:
+                    return TypedResults.NotFound<ProblemDetails>(null);
+            }
+        });
+
+        // When the endpoint method is asynchronous, the return type must have the `Task<>` wrapper.
+        group.MapPost("/async-typed-results",
+            async Task<Results<Ok<Todo>, NoContent, BadRequest<ProblemDetails>, NotFound<ProblemDetails>>>
+        (
+            int v
+        ) =>
+            {
+                var todo = new Todo { Id = 1, Title = "Todo 1" };
+                var routeValues = new Dictionary<string, int>
+            {
+                { "id", todo.Id }
+            };
+                switch (v)
+                {
+                    case 200:
+                        return TypedResults.Ok(todo);
+                    case 204:
+                        return TypedResults.NoContent();
+                    case 400:
+                        return TypedResults.BadRequest<ProblemDetails>(null);
+                    default:
+                        return TypedResults.NotFound<ProblemDetails>(null);
+                }
+            });
 
         // Non-Json 200 response
         group.MapGet("/{id}/as-text", Results<ContentHttpResult, NotFound<ProblemDetails>> (int id) =>
