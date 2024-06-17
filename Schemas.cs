@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor.
 /// <summary>
@@ -14,7 +15,7 @@ public class Schemas
     string Field;
 
     /// <summary>
-    /// Use xml comments with the <summary> tag to produce a description in the generated schema
+    /// Use xml comments with the summary tag to produce a description in the generated schema
     /// </summary>
     public string Description { get; set; }
 
@@ -71,9 +72,75 @@ public class Schemas
     public string StringWithPattern { get; set; }
 
     /// <summary>
-    /// Swashbuckle defines all strings as nullable, whether or not they are C# nullable.
+    /// String with example value
     /// </summary>
-    public string? NullableString { get; set; }
+    /// <example>Example value</example>
+    public string StringWithExample { get; set; }
+
+    /// <summary>
+    /// Int with example value
+    /// </summary>
+    /// <example>42</example>
+    public int IntWIthExample { get; set; }
+
+    public string NonNullableRef { get; set; }
+    public string? NullableRef { get; set; }
+    public int NonNullableValue { get; set; }
+    public int? NullableValue { get; set; }
+
+    public DayOfTheWeek Enum { get; set; }
+    public Whacky WhackyEnum { get; set; }
+    public DayOfTheWeekAsString EnumAsString { get; set; }
+
+    [AllowedValues("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday")]
+    public string AllowedValues { get; set; }
+
+    [Description("Nested schema")]
+    public Nested Inner { get; set; }
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
+public enum DayOfTheWeek
+{
+    Sunday,
+    Monday,
+    Tuesday,
+    Wednesday,
+    Thursday,
+    Friday,
+    Saturday
+}
+
+[JsonConverter(typeof(JsonStringEnumConverter<DayOfTheWeekAsString>))]
+public enum DayOfTheWeekAsString
+{
+    Sunday,
+    Monday,
+    Tuesday,
+    Wednesday,
+    Thursday,
+    Friday,
+    Saturday
+}
+
+public enum Whacky {
+    Gravity = 1,
+    Antigravity = -1,
+    Answer = 42
+}
+
+public record Nested(
+    [Description("this is a date")]
+    DateOnly Date,
+
+    [Description("Temp in Celcius")]
+    [Range(0, 100)]
+    int TemperatureC,
+
+    [MinLength(1)]
+    [MaxLength(63)]
+    string? Summary)
+{
+    [Description("Temp in Farenheit")]
+    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+}

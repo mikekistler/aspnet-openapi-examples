@@ -108,9 +108,33 @@ Use the [`RegularExpression` attribute] to set the `pattern` of a `string`.
 
 ### example / examples
 
+Use the XML doc [`Example` tag] to set the `example` of a property.
+
+[`Example` tag]: https://learn.microsoft.com/dotnet/csharp/language-reference/xmldoc/recommended-tags#example
+
 ### nullable
 
-Swashbuckle defines all strings as `nullable: true`, whether or not they are C# nullable.
+Reference type properties have `nullable: true` in the generated schema.
+
+Nullable value type properties have `nullable: true` in the generated schema.
+
+Non-nullable value type properties have `nullable: false` in the generated schema.
+
+### enum
+
+Properties with an `enum` type are represented as an `enum` in the generated schema. Since all C# enums are
+integer-based, the property is defined with `type: integer` and `format: int32`, and
+the `enum` values are the implicit or explicit values of the C# enum.
+
+To get string-based enums, you can use the [`JsonConverter` attribute] with a [`JsonStringEnumConverter`]
+on a regular C# enum type.
+
+[`JsonConverter` attribute]: https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonconverterattribute
+[`JsonStringEnumConverter`]: https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonstringenumconverter
+
+Note: Swashbuckle does not add an `enum` to the schema for a property with the [`AllowedValues` attribute].
+
+[`AllowedValues` attribute]: https://learn.microsoft.com/dotnet/api/system.componentmodel.dataannotations.allowedvaluesattribute`]
 
 ## Info
 
@@ -193,7 +217,9 @@ attribute.
 
 ### description
 
-Unfortunately there appears to be no simple means to add a description to a parameter operation parameters.
+There appears to be no simple means to add a description to operation parameters when using delegate methods.
+But you can use the `[Description]` attribute on parameters of an endpoint handler implemented as a static method.
+
 Neither the `[Description]` attribute nor xml comments seem to work.
 
 However there is the fallback of using a [Document Filter] or an [Operation Filter] to set the `description` property.
@@ -204,6 +230,10 @@ The `required` property of a parameter is determined by its nullability:
 
 - a non-nullable parameter is marked as `required: true`
 - a nullable parameter is implicitly `required: false`
+
+### schema
+
+The `schema` property of a parameter object is set as described in the [Schemas] section above.
 
 ### other properties
 
