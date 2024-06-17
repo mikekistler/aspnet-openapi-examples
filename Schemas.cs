@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.CompilerServices;
+using System.Text.Json.Serialization;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor.
 public class Schemas
@@ -47,10 +48,43 @@ public class Schemas
     [RegularExpression(@"^[A-Za-z0-9-]*$")]
     public string StringWithPattern { get; set; }
 
-    public string? NullableString { get; set; }
+    public string NonNullableRef { get; set; }
+    public string? NullableRef { get; set; }
+    public int NonNullableValue { get; set; }
+    public int? NullableValue { get; set; }
+
+    public DayOfTheWeek Enum { get; set; }
+
+    public DayOfTheWeekAsString EnumAsString { get; set; }
+
+    [AllowedValues("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday")]
+    public string AllowedValues { get; set; }
 
     [Description("Nested schema")]
     public Nested Inner { get; set; }
+}
+
+public enum DayOfTheWeek
+{
+    Sunday,
+    Monday,
+    Tuesday,
+    Wednesday,
+    Thursday,
+    Friday,
+    Saturday
+}
+
+[JsonConverter(typeof(JsonStringEnumConverter<DayOfTheWeekAsString>))]
+public enum DayOfTheWeekAsString
+{
+    Sunday,
+    Monday,
+    Tuesday,
+    Wednesday,
+    Thursday,
+    Friday,
+    Saturday
 }
 
 public record Nested(

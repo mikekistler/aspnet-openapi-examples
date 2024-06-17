@@ -100,11 +100,29 @@ Use the [`RegularExpression` attribute] to set the `pattern` of a `string`.
 
 [`RegularExpression` attribute]: https://learn.microsoft.com/dotnet/api/system.componentmodel.dataannotations.regularexpressionattribute
 
-### example / examples
+### example
+
+Currently you must use a [DocumentTransformer] to add an `example` to a the schema.
 
 ### nullable
 
-Properties defined as a nullable value type will have `"nullable": true` in the generated schema.
+Properties defined as a nullable value or reference type will have `"nullable": true` in the generated schema.
+
+## enum
+
+Properties with an `enum` type are represented as an `enum` in the generated schema. Since all C# enums are
+integer-based, the property is defined with `type: integer` and `format: int32`, and
+the `enum` values are the implicit or explicit values of the C# enum.
+
+To get string-based enums, you can use the [`JsonConverter` attribute] with a [`JsonStringEnumConverter`]
+on a regular C# enum type.
+
+[`JsonConverter` attribute]: https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonconverterattribute
+[`JsonStringEnumConverter`]: https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonstringenumconverter
+
+Note: the [`AllowedValues` attribute] does not set the `enum` values of a property.
+
+[`AllowedValues` attribute]: https://learn.microsoft.com/dotnet/api/system.componentmodel.dataannotations.allowedvaluesattribute`]
 
 ## Info
 
