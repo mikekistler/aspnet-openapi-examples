@@ -311,7 +311,9 @@ that produce a `responses` entry:
 | Conflict()                 | 409         |
 | UnprocessableEntity()      | 422         |
 
-All of these methods except `NoContent` have a generic overload that allows you to specify the response body.
+All of these methods except `NoContent` have a generic overload that allows you to specify the type of the response body,
+which is used to produce an "application/json" content entry with the schema for the specified type. See the [content](#content)
+section below for information about how to produce content entries for other media types.
 
 Note that the `CreatedAtRoute` and `AcceptedAtRoute` methods do not set the `Location` header in the response object.
 
@@ -320,12 +322,6 @@ helper method -- this sets the body to `null` which will trigger the middleware 
 
 Use a transformer to set the `headers`, `links`, or to add specification extensions to the response object.
 
-#### File responses
-
-https://github.com/dotnet/aspnetcore/issues/34544#issuecomment-2148434850
-
-
-
 ### content
 
 You can create multiple `mediaTypeObject` entries in the `content` property of a response object
@@ -333,12 +329,19 @@ by specifying all the media types in the `Produces` extension method on the endp
 However, each of these `mediaTypeObject` entries will have the same schema, so if you need different
 schemas for different media types, you will need to use a transformer.
 
+It is possible but currently a bit complicated to generate content entries for media types other than "application/json"
+from the return type of the endpoint method. To do this, you need to create a class that implements `IResult` and `IEndpointMetadataProvider`
+and make this class the return type of the endpoint method. There is an example of this in the [OkTextPlain] class in the
+project.
+
 Use a transformer to set the `example`, `examples`, `encoding`, or
 to add specification extensions to any `mediaTypeObject` within the `content` of the response.
 
 ## More schema fields
 
 ### additionalProperties
+
+
 
 ### allOf
 
