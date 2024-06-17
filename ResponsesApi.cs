@@ -166,11 +166,11 @@ internal static class ResponsesApi
             });
 
         // Non-Json 200 response
-        group.MapGet("/{id}/as-text", Results<ContentHttpResult, NotFound<ProblemDetails>> (int id) =>
+        group.MapGet("/{id}/as-text", Results<OkTextPlain, NotFound<ProblemDetails>> (int id) =>
         {
             if (id <= 99)
             {
-                return TypedResults.Content($"Todo {id}", "text/plain");
+                return new OkTextPlain($"Todo {id}");
             }
             // Pass null so that the StatusCodePagesMiddleware will generate a problem details response
             return TypedResults.NotFound<ProblemDetails>(null);

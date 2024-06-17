@@ -16,3 +16,8 @@ Accept: application/json
 ### PUT returns 400
 
 PUT {{HostAddress}}/responses/42/with-typed-results
+
+### Return text plain
+
+GET {{HostAddress}}/responses/42/as-text
+
