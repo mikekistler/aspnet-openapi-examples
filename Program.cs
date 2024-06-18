@@ -53,5 +53,6 @@ app.MapDataTypes();
 app.MapSchemas();
 app.MapPaths();
 app.MapOperations();
+app.MapRequestBodies();
 
 app.Run();
