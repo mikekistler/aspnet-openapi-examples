@@ -62,6 +62,8 @@ public class Schemas
 
     [Description("Nested schema")]
     public Nested Inner { get; set; }
+
+    public Dictionary<string, string> Dictionary { get; set; }
 }
 
 public enum DayOfTheWeek
