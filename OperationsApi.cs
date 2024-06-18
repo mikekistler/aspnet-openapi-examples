@@ -18,8 +18,8 @@ internal static class OperationsApi
         {
             return TypedResults.Ok("Good to go");
         })
-        .WithSummary("Operation summary from extention method")
-        .WithDescription("Operation description from extention method")
+        .WithSummary("Operation summary from extension method")
+        .WithDescription("Operation description from extension method")
         .WithName("FromMethods");
 
         // summary, description, and operationId can be set using attributes

@@ -7,7 +7,7 @@ internal static class DataTypesApi
     {
         var group = routes.MapGroup("/data-types");
 
-        group.WithTags("DataTypes");
+        group.WithTags("Data Types");
 
         // List all DataTypes
         group.MapGet("/", Ok<DataTypes> () =>

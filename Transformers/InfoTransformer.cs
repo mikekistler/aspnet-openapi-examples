@@ -18,7 +18,7 @@ internal sealed class InfoTransformer() : IOpenApiDocumentTransformer
         };
 
         // Add a description. This could be multi-line and contain markdown.
-        document.Info.Description = 
+        document.Info.Description =
         """
         # Examples of using ASP.NET to create OpenAPI v3 API definitions
 
