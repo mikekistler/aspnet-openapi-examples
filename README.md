@@ -58,19 +58,15 @@ Use the [`Description` attribute] to set the `description` of a property.
 
 ### required
 
-Properties with the [required modifier] are required in the generated schema.
+Properties with either the [required modifier] or the [Required attribute] are required in the generated schema.
 
 Required properties in a record constructor are also required in the generated schema.
-
-<!-- -->
-Properties with the [Required attribute] are _not_ required in the generated schema.
 
 [required modifier]: https://learn.microsoft.com/dotnet/csharp/language-reference/proposals/csharp-11.0/required-members#required-modifier
 [Required attribute]: https://learn.microsoft.com/dotnet/api/system.componentmodel.dataannotations.requiredattribute
 
 ### default
 
-<!-- Support added in PR #56219 (preview6) -->
 Use the [`DefaultValue` attribute] to set the `default` value of a property in the schema.
 
 Note that properties with a default value do _not_ have a default in the generated schema.
@@ -107,6 +103,12 @@ Currently you must use a [DocumentTransformer] to add an `example` to a the sche
 ### nullable
 
 Properties defined as a nullable value or reference type will have `"nullable": true` in the generated schema.
+
+### readOnly
+
+Computed properties (properties with an initial value and no setter) are _not_ marked as `readOnly` in the generated schema.
+
+Properties with the `ReadOnly` attribute are _not_ marked as `readOnly` in the generated schema.
 
 ## enum
 
@@ -313,7 +315,7 @@ that produce a `responses` entry:
 
 All of these methods except `NoContent` have a generic overload that allows you to specify the type of the response body,
 which is used to produce an "application/json" content entry with the schema for the specified type. See the [content](#content)
-section below for information about how to produce content entries for other media types.
+section below for information about how to produce content entries for other status codes or media types.
 
 Note that the `CreatedAtRoute` and `AcceptedAtRoute` methods do not set the `Location` header in the response object.
 
@@ -341,7 +343,9 @@ to add specification extensions to any `mediaTypeObject` within the `content` of
 
 ### additionalProperties
 
+Schemas are generated without an `additionalProperties` assertion by default, which then applies the default of `true`.
 
+To generate a schema with a specific `additionalProperties` assertion ...
 
 ### allOf
 
@@ -352,10 +356,6 @@ to add specification extensions to any `mediaTypeObject` within the `content` of
 ### oneOf
 
 ### oneOf with discriminator
-
-### nullable
-
-### readOnly
 
 ### external $ref
 

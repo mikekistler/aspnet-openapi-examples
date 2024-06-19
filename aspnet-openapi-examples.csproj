@@ -12,6 +12,10 @@
     <OpenApiGenerateDocuments>true</OpenApiGenerateDocuments>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <NoWarn>$(NoWarn);8618</NoWarn> <!-- Disable warning for Non-nullable field must contain a non-null value when exiting constructor. -->
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0-preview.6.24320.6" />
     <PackageReference Include="Microsoft.Extensions.ApiDescription.Server" Version="9.0.0-preview.6.24320.6">
