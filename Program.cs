@@ -21,7 +21,7 @@ builder.Services.AddOpenApi(options => {
     options.UseTransformer<InfoTransformer>();
     options.UseTransformer((document, context, cancellationToken) => 
     {
-        var serverUrl = builder.WebHost.GetSetting(WebHostDefaults.ServerUrlsKey);
+        var serverUrl = builder.WebHost.GetSetting(WebHostDefaults.ServerUrlsKey) ?? "http://localhost:5000";
         document.Servers = new List<OpenApiServer>
         {
             new OpenApiServer
@@ -51,5 +51,6 @@ app.MapPaths();
 app.MapOperations();
 app.MapRequestBodies();
 app.MapResponses();
+app.MapMoreSchemas();
 
 app.Run();

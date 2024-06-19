@@ -21,3 +21,21 @@ PUT {{HostAddress}}/responses/42/with-typed-results
 ### Return text plain
 
 GET {{HostAddress}}/responses/42/as-text
+
+### Polymorphism
+
+GET {{HostAddress}}/more-schemas/shapes?type=triangle
+Accept: application/json
+
+###
+
+POST {{HostAddress}}/more-schemas/shape-type
+Accept: application/json
+Content-Type: application/json
+
+{
+  "shapeType": "triangle",
+  "hypotenuse": 1,
+  "color": "blue",
+  "sides": 3
+}

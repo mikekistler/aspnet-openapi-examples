@@ -28,8 +28,10 @@ public class DataTypes
     [Description("type: string, format: byte")]
     public byte Byte { get; set; }
 
+    public decimal Decimal { get; set; }
+
     // This property has no `type` defined.
-    //public unknown notype { get; set; }
+    //public object notype { get; set; }
 
     [Description("type: string, format: date-time")]
     public DateTimeOffset DateTimeOffset { get; set; }

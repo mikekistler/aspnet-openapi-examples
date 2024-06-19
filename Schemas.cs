@@ -3,7 +3,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
 
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor.
 public class Schemas
 {
     // Internal properties are not included in the generated schema properties
@@ -52,6 +51,11 @@ public class Schemas
     public string? NullableRef { get; set; }
     public int NonNullableValue { get; set; }
     public int? NullableValue { get; set; }
+
+    public int ComputedProperty { get; } = 42;
+
+    [ReadOnly(true)]
+    public int ReadOnlyProperty { get; set; }
 
     public DayOfTheWeek Enum { get; set; }
 
@@ -102,6 +106,3 @@ public record Nested(
     [Description("Temp in Farenheit")]
     public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
 }
-
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-
