@@ -1,0 +1,6 @@
+@DictProps_HostAddress = http://localhost:5192
+
+GET {{DictProps_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
