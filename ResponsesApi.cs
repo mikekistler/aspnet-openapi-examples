@@ -176,6 +176,18 @@ internal static class ResponsesApi
             return TypedResults.NotFound<ProblemDetails>(null);
         });
 
+        // Image response
+        group.MapGet("/{id}/as-image", Results<OkImage, NotFound<ProblemDetails>> (int id) =>
+        {
+            if (id <= 99)
+            {
+                var jpeg = new byte[] { 0xFF, 0xD8, 0xFF, 0xDB, 0x00, 0x84, 0x00, 0x06 };
+                return new OkImage(jpeg, OkImage.ImageTypes.Jpeg);
+            }
+            // Pass null so that the StatusCodePagesMiddleware will generate a problem details response
+            return TypedResults.NotFound<ProblemDetails>(null);
+        });
+
         // Using the TypedResults helper with multiple response types
         group.MapGet("/{id}/multi-typed-results", Results<FileContentHttpResult, StatusCodeHttpResult> (int id, [FromHeader] string accept) =>
         {
