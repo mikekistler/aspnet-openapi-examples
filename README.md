@@ -133,6 +133,12 @@ Nullable value type properties have `nullable: true` in the generated schema.
 
 Non-nullable value type properties have `nullable: false` in the generated schema.
 
+### readOnly
+
+Computed properties are defined as `readOnly: true` in the generated schema.
+
+Properties with the `ReadOnly` attribute are _not_ marked as `readOnly: true` in the generated schema.
+
 ### enum
 
 Properties with an `enum` type are represented as an `enum` in the generated schema. Since all C# enums are
@@ -301,7 +307,7 @@ such as "default" or "4XX".
 The response `description` (which is required) is set to a standard value based on the status code,
 but can be overridden with a transformer.
 
-For the `Produces` extension method and `ProducesResponseType` attribute, 
+For the `Produces` extension method and `ProducesResponseType` attribute,
 there is no validation of the type specified against the actual response object returned
 from the delegate method.
 
@@ -367,7 +373,13 @@ to add specification extensions to any `mediaTypeObject` within the `content` of
 
 ### additionalProperties
 
+Schemas are generated with an `additionalProperties: false` assertion by default.
 
+To generate a schema with a specific `additionalProperties` assertion, define the property or class as a `Dictionary<string, type>`.
+The key type for the dictionary should be `string`, and the schema for the value type will be the `additionalProperties` schema.
+
+There does not appear to be a way to create a schema that has both properties and `additionalProperties`.
+Extending a Dictionary class with named properties does not work.
 
 ### allOf
 
@@ -378,10 +390,6 @@ to add specification extensions to any `mediaTypeObject` within the `content` of
 ### oneOf
 
 ### oneOf with discriminator
-
-### nullable
-
-### readOnly
 
 ### external $ref
 

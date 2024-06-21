@@ -56,5 +56,6 @@ app.MapPaths();
 app.MapOperations();
 app.MapRequestBodies();
 app.MapResponses();
+app.MapMoreSchemas();
 
 app.Run();

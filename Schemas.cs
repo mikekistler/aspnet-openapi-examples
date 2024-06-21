@@ -2,7 +2,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor.
 /// <summary>
 /// Represents the schemas.
 /// </summary>
@@ -88,6 +87,11 @@ public class Schemas
     public int NonNullableValue { get; set; }
     public int? NullableValue { get; set; }
 
+    public int ComputedProperty { get; } = 42;
+
+    [ReadOnly(true)]
+    public int ReadOnlyProperty { get; set; }
+
     public DayOfTheWeek Enum { get; set; }
     public Whacky WhackyEnum { get; set; }
     public DayOfTheWeekAsString EnumAsString { get; set; }
@@ -95,10 +99,11 @@ public class Schemas
     [AllowedValues("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday")]
     public string AllowedValues { get; set; }
 
+    public object Object { get; set; }
+
     [Description("Nested schema")]
     public Nested Inner { get; set; }
 }
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
 public enum DayOfTheWeek
 {
