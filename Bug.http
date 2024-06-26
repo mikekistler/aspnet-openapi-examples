@@ -1,6 +1,19 @@
-@Bug_HostAddress = http://localhost:5044
+@HostAddress = http://localhost:5044
 
-GET {{Bug_HostAddress}}/weatherforecast/
+GET {{HostAddress}}/shapes?type=triangle
 Accept: application/json
+
+###
+
+POST {{HostAddress}}/shape-type
+Accept: application/json
+Content-Type: application/json
+
+{
+  "shapeType": "triangle",
+  "hypotenuse": 1,
+  "color": "blue",
+  "sides": 3
+}
 
 ###

@@ -1,9 +1,13 @@
+using Microsoft.AspNetCore.Mvc;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c => {
+     c.EnableAnnotations(enableAnnotationsForInheritance: true, enableAnnotationsForPolymorphism: true);
+});
 
 var app = builder.Build();
 
@@ -16,29 +20,32 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
+app.MapGet("/shapes",
+(
+    [FromQuery] string type
+) =>
 {
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+    // Return a circle, triangle, or square based on the query parameter
+    Shape shape = type switch
+    {
+        "circle" => new Circle { ShapeType = "circle", Radius = 1 },
+        "triangle" => new Triangle { ShapeType = "triangle", Hypotenuse = 1 },
+        "square" => new Square { ShapeType = "square", Area = 1 },
+        _ => null
+    };
+    return TypedResults.Ok<Shape>(shape);
+});
 
-app.MapGet("/weatherforecast", () =>
+// An endpoint that receives a shape and returns the name of the type of shape
+app.MapPost("/shape-type",
+(
+      Shape shape
+) =>
 {
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast")
-.WithOpenApi();
+    // use reflection to get the type of the shape
+    Type shapeType = shape.GetType();
+    string shapeTypeName = shapeType.Name;
+    return TypedResults.Ok<string>(shapeTypeName);
+});
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
