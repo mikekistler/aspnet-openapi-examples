@@ -24,6 +24,8 @@ public class Child : Parent
     public string Prop3 { get; set; }
 }
 
+// STJ will add the type discriminator property to the derived types
+[JsonPolymorphic(TypeDiscriminatorPropertyName = "shapeType")]
 [JsonDerivedType(typeof(Triangle), typeDiscriminator: "triangle")]
 [JsonDerivedType(typeof(Square), typeDiscriminator: "square")]
 [JsonDerivedType(typeof(Circle), typeDiscriminator: "circle")]
@@ -43,5 +45,5 @@ internal class Square : Shape
 }
 internal class Circle : Shape
 {
-    public double diameter { get; set; }
+    public double Radius { get; set; }
 }

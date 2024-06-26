@@ -1,4 +1,6 @@
-﻿internal static class MoreSchemasApi
+﻿using Microsoft.AspNetCore.Mvc;
+
+internal static class MoreSchemasApi
 {
     public static RouteGroupBuilder MapMoreSchemas(this IEndpointRouteBuilder routes)
     {
@@ -46,11 +48,32 @@
             return TypedResults.Ok<Child>(body);
         });
 
-        group.MapPost("/shapes",
+        // Return a circle, triangle, or square based on the query parameter
+        group.MapGet("/shapes",
         (
+            [FromQuery] string type
         ) =>
         {
-            return TypedResults.Ok<Shape>(null);
+            Shape shape = type switch
+            {
+                "circle" => new Circle { Radius = 1 },
+                "triangle" => new Triangle { Hypotenuse = 1 },
+                "square" => new Square { Area = 1 },
+                _ => null
+            };
+            return TypedResults.Ok<Shape>(shape);
+        });
+
+        // Receives a shape and return the name of the type of shape
+        group.MapPost("/shape-type",
+        (
+              Shape shape
+        ) =>
+        {
+            // use reflection to get the type of the shape
+            Type shapeType = shape.GetType();
+            string shapeTypeName = shapeType.Name;
+            return TypedResults.Ok<string>(shapeTypeName);
         });
 
         return group;
