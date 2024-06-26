@@ -34,25 +34,30 @@ public class Child : Parent
 [SwaggerSubType(typeof(Triangle), DiscriminatorValue = "triangle")]
 [SwaggerSubType(typeof(Square), DiscriminatorValue = "square")]
 [SwaggerSubType(typeof(Circle), DiscriminatorValue = "circle")]
+[JsonPolymorphic(TypeDiscriminatorPropertyName = "shapeType")]
+[JsonDerivedType(typeof(Triangle), typeDiscriminator: "triangle")]
+[JsonDerivedType(typeof(Square), typeDiscriminator: "square")]
+[JsonDerivedType(typeof(Circle), typeDiscriminator: "circle")]
 internal abstract class Shape
 {
-    public string ShapeType { get; set; } = string.Empty;
+    // Don't define the discriminator property on the base class
+    // STJ will automatically add it to the derived classes
     public string Color { get; set; } = string.Empty;
     public int Sides { get; set; }
 }
 
 internal class Triangle : Shape
 {
-    public new string ShapeType { get; set; } = "triangle";
+    // Don't define the discriminator property in child classes
     public double Hypotenuse { get; set; }
 }
 internal class Square : Shape
 {
-    public new string ShapeType { get; set; } = "square";
+    // Don't define the discriminator property in child classes
     public double Area { get; set; }
 }
 internal class Circle : Shape
 {
-    public new string ShapeType { get; set; } = "circle";
+    // Don't define the discriminator property in child classes
     public double Radius { get; set; }
 }

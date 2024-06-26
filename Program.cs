@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Reflection; // For the Assembly class
 using System.Text.Json.Serialization;
 using Microsoft.OpenApi.Models;
@@ -13,7 +14,13 @@ builder.Services.AddSwaggerGen(c =>
     var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
     c.IncludeXmlComments(xmlPath);
-    c.EnableAnnotations();
+    //c.EnableAnnotations();
+    c.EnableAnnotations(enableAnnotationsForInheritance: true, enableAnnotationsForPolymorphism: true);
+
+    // use allOf with $ref instead of flattened schema
+    c.UseAllOfForInheritance();
+    // use oneOf with $ref instead of flattened schema
+    c.UseOneOfForPolymorphism();
 
     // Customize generation of DateOnly and TimeOnly types
     c.MapType<DateOnly>(() => new OpenApiSchema { Type = "string", Format = "date" });

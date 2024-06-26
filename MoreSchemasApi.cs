@@ -75,6 +75,7 @@ internal static class MoreSchemasApi
                string shapeTypeName = shapeType.Name;
                return TypedResults.Ok<string>(shapeTypeName);
          });
+
         return group;
     }
 }

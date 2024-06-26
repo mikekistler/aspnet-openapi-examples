@@ -383,19 +383,69 @@ Extending a Dictionary class with named properties does not work.
 
 ### allOf
 
-### discriminator
+By default, Swashbuckle "flattens" the schema of child classes, meaning that it includes all the properties of the parent class
+in the schema for the child class. This behavior can be changed with the `UseAllOfForInheritance` method on the `AddSwaggerGen` options,
+which will use the `allOf` keyword in the schema to incorporate the properties of the parent schema into child.
 
-### anyOf
+Here's an example of a child schema produced from Swashbuckle that uses `allOf` to include the properties of the parent schema:
+```json
+  "Child": {
+    "allOf": [
+      {
+        "$ref": "#/components/schemas/Parent"
+      },
+      {
+        "type": "object",
+        "properties": {
+          "childProp": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      }
+    ]
+  }
+```
 
-### oneOf
+Note: the `additionalProperties` assertion here is problematic, because it _disallows_ any properties other than `childProp`,
+_including_ the properties of the parent schema. If you enable `UseAllOfForInheritance`, you should also
+define a schema filter to remove the `additionalProperties: false` assertion from any schemas that are elements of an `allOf` array.
 
 ### oneOf with discriminator
 
-### external $ref
+There are at least two ways to generate a schema with the `oneOf` keyword and a discriminator:
+- use the `UseOneOfForPolymorphism` method on the `AddSwaggerGen` options
+- use the `SwaggerDiscriminator` and `SwaggerSubTypes` Swashbuckle annotations on the base class
+
+Using the Swashbuckle annotations seems like the easier way to go.
+
+But there are few details to be aware of:
+- the `SwaggerDiscriminator` annotation should name the property as it will appear in the schema,
+which is typically camel-cased, not the C# property name, which is typically Pascal-cased.
+- If you are using `System.Text.Json` as the JSON serializer, you will need to add the `JsonPolymorphic`
+and `JsonDerivedType` attributes so that STJ knows how to serialize and deserialize the polymorphic types.
+These attributes essentially duplicate the information in the Swashbuckle annotations, but they are necessary.
+- The STJ `JsonDerivedType` attribute adds the discriminator property to the base class, which can be seen in
+the schema for the base class in the OpenAPI document.
+This attribute also modifies the constructor of each derived class to set the discriminator value.
+
+Another important detail is that Swashbuckle translates references to the base class in a request or response body
+to a `oneOf` of the derived classes, _not_ to a reference to the base class schema.
+From a JSON schema perspective, this is more accurate, but it may not be what you expect.
+It also has a subtle flaw in that is possible that an object may be valid against more than one of the `oneOf` schemas,
+and only differentiated by the discriminator property, but this is not expressed in the schema.
+
+### anyOf
+
+I could not find any way to generate a schema with the `anyOf` keyword.
 
 ## securityDefinitions / securitySchemes
 
 ## Specification Extensions
+
+Most of the OpenApi model classes contain an "Extensions" property, and you can use a Filter to set
+specification extensions using this property.
 
 <!-- Links -->
 [Document Filter]: https://github.com/domaindrivendev/Swashbuckle.AspNetCore?tab=readme-ov-file#document-filters
