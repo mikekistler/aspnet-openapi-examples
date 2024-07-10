@@ -193,6 +193,7 @@ If there is a delegate method parameter that is explicitly or implicitly `[FromB
 to set the `requestBody` property of the operation.
 
 The `responses` object is populated from several sources.
+
 - the declared return value of the delegate method
 - the `Produces` extension method on the delegate.
 
@@ -222,6 +223,7 @@ Unfortunately, some tools e.g. SwaggerUi only use the description in the paramet
 ### required
 
 The `required` property of a parameter is determined by its type:
+
 - a non-nullable value type parameter is marked as `required: true`
 - a nullable value type parameter is implicitly `required: false`
 - a non-nullable reference type parameter is marked as `required: true`
@@ -269,6 +271,7 @@ to add specification extensions to the `mediaTypeObject`.
 ## Responses
 
 Response definitions can set using any of the following approaches:
+
 - a `Produces` extension method on the endpoint
 - a `ProducesResponseType` attribute on the route handler
 - define the route handler return type to be one or more `TypedResults`
@@ -327,6 +330,7 @@ section below for information about how to produce content entries for other sta
 
 You can implement your own class to set the endpoint metadata that is used to create a `response` object.
 The examples project contains two classes that illustrate this:
+
 - The `OkTextPlain` class creates a 200 response and sets the MIME type to "text/plain".
 - The `OkImage` class also creates a 200 response with three `content` entries for "image/jpeg", "image/png", and "image/tiff".
 
