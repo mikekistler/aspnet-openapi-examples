@@ -32,13 +32,13 @@ internal static class MoreSchemasApi
             return TypedResults.Ok<ExtendsDict>(body);
         });
 
-        //group.MapPost("/parent",
-        //(
-        //    Parent body
-        //) =>
-        //{
-        //    return TypedResults.Ok<Parent>(body);
-        //});
+        group.MapPost("/parent",
+        (
+            Parent body
+        ) =>
+        {
+            return TypedResults.Ok<Parent>(body);
+        });
 
         group.MapPost("/child",
         (
@@ -74,6 +74,14 @@ internal static class MoreSchemasApi
             Type shapeType = shape.GetType();
             string shapeTypeName = shapeType.Name;
             return TypedResults.Ok<string>(shapeTypeName);
+        });
+
+        group.MapPost("map-type",
+        (
+            [FromQuery] decimal mapped
+        ) =>
+        {
+            return TypedResults.Ok();
         });
 
         return group;

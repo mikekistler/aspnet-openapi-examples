@@ -1,6 +1,6 @@
 # aspnet-openapi-examples
 
-<!-- cspell:ignore aspnet openapi -->
+<!-- cspell:ignore aspnet openapi swashbuckle -->
 
 Examples of using ASP.NET to create OpenAPI v3 API definitions.
 
@@ -19,13 +19,13 @@ in the generated OpenAPI document.
 ### properties
 
 By default, only public properties are represented in the schema, but there are [JsonSerializerOptions]
-to also create schema properties for fields. 
+to also create schema properties for fields.
 
 ### property names
 
 By default in a .NET web application, property names in a schema are the camel-case form
-of the class or record property name. This can be changed using the `PropertyNamigPolicy` in the
-[JsonSerializerOptions], and can be changed on an individual property with the the 
+of the class or record property name. This can be changed using the `PropertyNamingPolicy` in the
+[JsonSerializerOptions], and can be changed on an individual property with the the
 [`JsonPropertyName`] attribute.
 
 [`JsonPropertyName`]: https://docs.microsoft.com/dotnet/api/system.text.json.serialization.jsonpropertynameattribute?view=net-9.0
@@ -41,6 +41,7 @@ The JSON Schema library maps standard C# types to OpenAPI `type` and `format` as
 | short          | integer        | int16            |
 | float          | number         | float            |
 | double         | number         | double           |
+| decimal        | number         | double           |
 | bool           | boolean        |                  |
 | string         | string         |                  |
 | byte           | string         | byte             |
@@ -49,6 +50,13 @@ The JSON Schema library maps standard C# types to OpenAPI `type` and `format` as
 | TimeOnly       | string         | time             |
 | Uri            | string         | uri              |
 | Guid           | string         | uuid             |
+
+The `type` and `format` can also be set with a [Schema Transformer].
+
+Swashbuckle provides the `MapType` method on the `AddSwaggerGen` options to customize the
+`type` and `format` for a C# type.
+The examples project includes a schema transformer called `TypeTransformer` that does more
+or less the same thing.
 
 ### description
 
@@ -110,7 +118,7 @@ Computed properties (properties with an initial value and no setter) are _not_ m
 
 Properties with the `ReadOnly` attribute are _not_ marked as `readOnly` in the generated schema.
 
-## enum
+### enum
 
 Properties with an `enum` type are represented as an `enum` in the generated schema. Since all C# enums are
 integer-based, the property is defined with `type: integer` and `format: int32`, and
@@ -131,7 +139,7 @@ Note: the [`AllowedValues` attribute] does not set the `enum` values of a proper
 You can add or replace content in the Info section with a [DocumentTransformer]. Within your transformer code,
 set fields in the `document.Info` property.
 
-.NET automatically fills in the `Title` and `Version`. There are also `Contact`, `Licence`, and `Description` fields.
+.NET automatically fills in the `Title` and `Version`. There are also `Contact`, `License`, and `Description` fields.
 The `Info.Description` and most other description fields in OpenAPI v3.x support [CommonMark] markdown content.
 
 [CommonMark]: https://spec.commonmark.org/
@@ -166,7 +174,7 @@ Use a [DocumentTransformer] to set the `summary`, `description`, `options`, `hea
 Each Map[Get,Put,Post,Delete,Patch] method invocation will create an operation. The following operation properties
 can be set using attributes or extension methods:
 
-| to set property | use extension method | or attribute | 
+| to set property | use extension method | or attribute |
 | --------------- | --- | ----|
 | summary | WithSummary | `[EndpointSummary()]` |
 | description | WithDescription | `[EndpointDescription()]` |
@@ -186,7 +194,6 @@ to set the `requestBody` property of the operation.
 
 The `responses` object is populated from several sources.
 - the declared return value of the delegate method
-- the value(s) returned from the delegate method
 - the `Produces` extension method on the delegate.
 
 See the [Responses] section below for details on how to set `responses`.
@@ -229,7 +236,7 @@ The `schema` property of a parameter object is set as described in the [Schemas]
 ### other properties
 
 The `deprecated`, `allowEmptyValue`,`style`, `explode`, `allowReserved`, `example`, and `examples`
-properties are not currently included in parameter objects. 
+properties are not currently included in parameter objects.
 Use a [DocumentTransformer] or an [OperationTransformer] to set any of these properties when needed.
 
 ## Request Body Object
@@ -270,34 +277,35 @@ See [Describe response types] in the .NET documentation for more information.
 
 [Describe response types]: https://learn.microsoft.com/aspnet/core/fundamentals/minimal-apis/openapi?view=aspnetcore-9.0#describe-response-types]
 
-These approaches will set a numeric `statusCode`, the response MIME type (defaults to "applicaiton/json"),
+These approaches will set a numeric `statusCode`, the response MIME type (defaults to "application/json"),
 and schema of the response object.
 Use a [DocumentTransformer] or an [OperationTransformer] to define a response with a non-numeric status code,
 such as "default" or "4XX".
 The response `description` (which is required) is set to a standard value based on the status code,
 but can be overridden with a transformer.
 
-For the `Produces` extension method and `ProducesResponseType` attribute, 
+For the `Produces` extension method and `ProducesResponseType` attribute,
 there is no validation of the type specified against the actual response object returned
 from the delegate method.
 
-If the endpoint method returns typed results, most commonly using the `TypedResults` helper methods,
-the response type may be inferred from the return type of the delegate method.
-If the method returns a single result type, the return type does not need to be defined explicitly,
-because it can be inferred by the compiler, but if there are multiple return types, you have to explicitly define
-the return type on the handler using [`Results`]. For more information see the
+Responses can also be populated from the route handler return type.
+The [`TypedResults`] class provides a set of static methods to wrap a response object and
+define a corresponding operation response.
+Note that the route handler return type may be defined implicitly when all return points
+return an object of the same type.
+If there are multiple return types, the return type must be explicitly defined
+on the handler using [`Results`]. For more information see the
 [.NET docs on Learn](https://learn.microsoft.com/aspnet/core/fundamentals/minimal-apis/responses#typedresults-vs-results).
 
+[`TypedResults`]: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.http.typedresults?view=aspnetcore-9.0
 [`Results`]: https://learn.microsoft.com/aspnet/core/fundamentals/minimal-apis/responses?view=aspnetcore-9.0#resultstresult1-tresultn
 
-Note that `Results` only supports from 2 to 6 different return types. Don't use `Results` with a single return type --
-it will fail to compile. Likewise, if you try to specify more than 6 return types, it will fail to compile.
+Note that `Results` only supports from 2 to 6 different return types. Don't use `Results` with a single return type -- it will fail to compile. Likewise, if you try to specify more than 6 return types, it will fail to compile.
 
 When the endpoint method is asynchronous, the return type must have the `Task<>` wrapper.
 
-Only `TypedResults` helper methods that return a class that implements `IEndpointMetadataProvider` will create
-a `responses` entry in the OpenAPI document. Here's a quick list of some of the `TypedResults` helper methods
-that produce a `responses` entry:
+Only return types that implement `IEndpointMetadataProvider` will create a `responses` entry in the OpenAPI document.
+Here's a quick list of some of the `TypedResults` helper methods that produce a `responses` entry:
 
 | TypedResults helper method | status code |
 | -------------------------- | ----------- |
@@ -317,9 +325,14 @@ All of these methods except `NoContent` have a generic overload that allows you 
 which is used to produce an "application/json" content entry with the schema for the specified type. See the [content](#content)
 section below for information about how to produce content entries for other status codes or media types.
 
+You can implement your own class to set the endpoint metadata that is used to create a `response` object.
+The examples project contains two classes that illustrate this:
+- The `OkTextPlain` class creates a 200 response and sets the MIME type to "text/plain".
+- The `OkImage` class also creates a 200 response with three `content` entries for "image/jpeg", "image/png", and "image/tiff".
+
 Note that the `CreatedAtRoute` and `AcceptedAtRoute` methods do not set the `Location` header in the response object.
 
-To return a typed ProlblemDetails response with the StatusCodePages middleware, pass `null` to the `TypedResults`
+To return a typed ProblemDetails response with the StatusCodePages middleware, pass `null` to the `TypedResults`
 helper method -- this sets the body to `null` which will trigger the middleware to add a ProblemDetails response body.
 
 Use a transformer to set the `headers`, `links`, or to add specification extensions to the response object.
@@ -345,23 +358,39 @@ to add specification extensions to any `mediaTypeObject` within the `content` of
 
 Schemas are generated without an `additionalProperties` assertion by default, which then applies the default of `true`.
 
-To generate a schema with a specific `additionalProperties` assertion ...
+To generate a schema with a specific `additionalProperties` assertion, define the property or class as a `Dictionary<string, type>`.
+The key type for the dictionary should be `string`, and the schema for the value type will be the `additionalProperties` schema.
+
+There does not appear to be a way to create a schema that has both properties and `additionalProperties`.
+Defining a class that extends Dictionary and has named properties does not work -- its schema only has `additionalProperties`.
+<!-- https://github.com/dotnet/aspnetcore/issues/56707 -->
 
 ### allOf
 
-### discriminator
+ASP.NET "flattens" the schema of child classes, meaning that it includes all the properties of the parent class
+in the schema for the child class. It does not use `allOf` to add the parent's properties to the schema of the child class.
 
-### anyOf
+### discriminator with anyOf
 
-### oneOf
+Use the `System.Text.Json` `JsonPolymorphic` and `JsonDerivedType` attributes on a parent class to
+to specify the discriminator property and subtypes for a polymorphic type.
+The `JsonDerivedType` attribute adds the discriminator property to the schema for each subclass,
+with an enum specifying the specific discriminator value for the subclass.
+This attribute also modifies the constructor of each derived class to set the discriminator value.
 
-### oneOf with discriminator
+### anyOf / oneOf
 
-### external $ref
+There is no in-built way to produce an `anyOf` without a discriminator or a `oneOf`.
+If you use case needs one of these then you will need to use a schema transformer to produce them.
 
-## securityDefinitions / securitySchemes
+## securitySchemes and security requirements
+
+Use a [DocumentTransformer] to add security schemes and security requirements.
 
 ## Specification Extensions
+
+Most of the OpenApi model classes contain an "Extensions" property, and you can use a transformer to set
+specification extensions using this property.
 
 <!-- Links -->
 

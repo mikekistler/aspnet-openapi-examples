@@ -1,0 +1,6 @@
+extends: spectral:oas
+rules:
+  operation-description: off
+  operation-operationId: off
+  operation-tag-defined: off
+
