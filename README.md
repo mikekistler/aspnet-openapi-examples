@@ -25,7 +25,7 @@ to also create schema properties for fields.
 
 By default in a .NET web application, property names in a schema are the camel-case form
 of the class or record property name. This can be changed using the `PropertyNamingPolicy` in the
-[JsonSerializerOptions], and can be changed on an individual property with the the
+[JsonSerializerOptions], and can be changed on an individual property with the
 [`JsonPropertyName`] attribute.
 
 [`JsonPropertyName`]: https://docs.microsoft.com/dotnet/api/system.text.json.serialization.jsonpropertynameattribute?view=net-9.0
@@ -44,12 +44,16 @@ The JSON Schema library maps standard C# types to OpenAPI `type` and `format` as
 | decimal        | number         | double           |
 | bool           | boolean        |                  |
 | string         | string         |                  |
+| char           | string         | char             |
 | byte           | string         | byte             |
+| byte[]         | string         |                  |
 | DateTimeOffset | string         | date-time        |
 | DateOnly       | string         | date             |
 | TimeOnly       | string         | time             |
 | Uri            | string         | uri              |
 | Guid           | string         | uuid             |
+| object         | &lt.omitted&gt. |                 |
+| dynamic        | &lt.omitted&gt. |                 |
 
 The `type` and `format` can also be set with a [Schema Transformer].
 

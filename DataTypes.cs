@@ -28,10 +28,16 @@ public class DataTypes
     [Description("type: string, format: byte")]
     public byte Byte { get; set; }
 
+    [Description("type: ???, format: ???")]
+    public byte[] ByteArray { get; set; }
+
     public decimal Decimal { get; set; }
 
-    // This property has no `type` defined.
-    //public object notype { get; set; }
+    // An object property has no `type` defined.
+    public object Object { get; set; }
+
+    // dynamic properties also have no `type` defined.
+    public dynamic Dynamic { get; set; }
 
     [Description("type: string, format: date-time")]
     public DateTimeOffset DateTimeOffset { get; set; }
@@ -48,9 +54,6 @@ public class DataTypes
     // OpenAPI allows any string as a format.
     // There is a registry of common formats at
     // https://spec.openapis.org/registry/format
-
-    //[Description("type: string, format: decimal")]
-    //public decimal Decimal { get; set; }
 
     //[Description("type: string, format: int8")]
     //public sbyte Int8 { get; set; }

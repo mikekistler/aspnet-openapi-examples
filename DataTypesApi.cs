@@ -16,6 +16,12 @@ internal static class DataTypesApi
             return TypedResults.Ok(dataTypes);
         });
 
+        group.MapPost("/", Ok<DataTypes> (DataTypes ) =>
+        {
+            var dataTypes = new DataTypes();
+            return TypedResults.Ok(dataTypes);
+        });
+
         return group;
     }
 }
