@@ -16,7 +16,7 @@ internal static class DataTypesApi
             return TypedResults.Ok(dataTypes);
         });
 
-        group.MapPost("/", Ok<DataTypes> (DataTypes ) =>
+        group.MapPost("/", Ok<DataTypes> (DataTypes body) =>
         {
             var dataTypes = new DataTypes();
             return TypedResults.Ok(dataTypes);

@@ -1,16 +1,28 @@
 using System.Text.Json.Serialization;
 
-internal class DictBody : Dictionary<string, string> { }
+public class DictBody : Dictionary<string, string> { }
 
-internal class DictProperty
+public class DictProperty
 {
     public Dictionary<string, string> Dict { get; set; }
 }
 
-internal class ExtendsDict : Dictionary<string, string>
+public class ExtendsDict : Dictionary<string, string>
 {
     public string Title { get; set; }
     public int Priority { get; set; }
+}
+
+class TypeWithExtensionData
+{
+    public required string Name { get; set; }
+    public required bool IsEnabled { get; set; }
+
+    // Note: The value type of this dictionary must be object or JsonElement.
+    // It cannot be a more restrictive type like string or int.
+    [JsonExtensionData]
+    public Dictionary<string, object>? AdditionalData { get; set; }
+
 }
 
 public class Parent

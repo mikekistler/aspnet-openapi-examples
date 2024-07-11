@@ -373,6 +373,11 @@ There does not appear to be a way to create a schema that has both properties an
 Defining a class that extends Dictionary and has named properties does not work -- its schema only has `additionalProperties`.
 <!-- https://github.com/dotnet/aspnetcore/issues/56707 -->
 
+The `JsonExtensionData` attribute also cannot be used to generate `additionalProperties` next to named properties,
+because the value type of the dictionary must be object or JsonElement -- it cannot be a more restrictive type
+like string or int.
+In other words, `JsonExtensionData` only corresponds to `additionalProperties: true`, which is the default.
+
 ### allOf
 
 ASP.NET "flattens" the schema of child classes, meaning that it includes all the properties of the parent class

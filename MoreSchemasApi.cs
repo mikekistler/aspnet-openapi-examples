@@ -32,6 +32,14 @@ internal static class MoreSchemasApi
             return TypedResults.Ok<ExtendsDict>(body);
         });
 
+        group.MapPost("/type-with-extension-data",
+        (
+            TypeWithExtensionData body
+        ) =>
+        {
+            return TypedResults.Ok<TypeWithExtensionData>(body);
+        });
+
         group.MapPost("/parent",
         (
             Parent body
