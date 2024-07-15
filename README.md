@@ -26,7 +26,7 @@ of the class or record property name. This can be changed using the `PropertyNam
 
 [`JsonPropertyName`]: https://docs.microsoft.com/dotnet/api/system.text.json.serialization.jsonpropertynameattribute?view=net-9.0
 
-## type and format
+### type and format
 
 The JSON Schema library maps standard C# types to OpenAPI `type` and `format` as follows:
 
@@ -59,7 +59,40 @@ The `type` and `format` can also be set with a [Schema Transformer].
 
 ### default
 
-## Info / Servers
+Properties with a default value do _not_ have a default in the generated schema.
+
+### minimum and maximum
+
+Use the [`Range` attribute] to set the `minimum` and `maximum` values of an `integer`, or `number`.
+
+[`Range` attribute]: https://learn.microsoft.com/dotnet/api/system.componentmodel.dataannotations.rangeattribute
+
+From the docs, it looks like it should be possible to use `Range` with `DateTimeOffset` properties, but it doesn't seem to work.
+
+Also, there does not seem to be a way to produce just `minimum` or `maximum` without the other.
+
+### minLength and maxLength
+
+Use the [`MinLength` attribute] and [`MaxLength` attribute] to set the `minLength` and `maxLength` of a `string`.
+
+[`MinLength` attribute]: https://learn.microsoft.com/dotnet/api/system.componentmodel.dataannotations.minlengthattribute
+[`MaxLength` attribute]: https://learn.microsoft.com/dotnet/api/system.componentmodel.dataannotations.maxlengthattribute
+
+### pattern
+
+Use the [`RegularExpression` attribute] to set the `pattern` of a `string`.
+
+[`RegularExpression` attribute]: https://learn.microsoft.com/dotnet/api/system.componentmodel.dataannotations.regularexpressionattribute
+
+### example / examples
+
+### nullable
+
+Properties defined as a nullable value type will have `"nullable": true` in the generated schema.
+
+## Info
+
+## Servers
 
 ## Paths Object
 
