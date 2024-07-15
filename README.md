@@ -39,14 +39,14 @@ The JSON Schema library maps standard C# types to OpenAPI `type` and `format` as
 | int            | integer        | int32            |
 | long           | integer        | int64            |
 | short          | integer        | int16            |
+| byte           | integer        | uint8            |
 | float          | number         | float            |
 | double         | number         | double           |
 | decimal        | number         | double           |
 | bool           | boolean        |                  |
 | string         | string         |                  |
 | char           | string         | char             |
-| byte           | string         | byte             |
-| byte[]         | string         |                  |
+| byte[]         | string         | byte             |
 | DateTimeOffset | string         | date-time        |
 | DateOnly       | string         | date             |
 | TimeOnly       | string         | time             |

@@ -25,10 +25,13 @@ public class DataTypes
     [Description("type: string")]
     public string String { get; set; }
 
-    [Description("type: string, format: byte")]
+    [Description("type: string, format: char")]
+    public char Char { get; set; }
+
+    [Description("type: string, format: uint8")]
     public byte Byte { get; set; }
 
-    [Description("type: ???, format: ???")]
+    [Description("type: string, format: byte")]
     public byte[] ByteArray { get; set; }
 
     public decimal Decimal { get; set; }
