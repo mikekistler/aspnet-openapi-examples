@@ -43,19 +43,20 @@ internal static class OperationsApi
         group.MapPost("/{id}/parameters",
         (
             // name
-            [Description("Pascal case")][FromQuery] string ? Pascal,       // parameter with Pascal-case name
-            [Description("My special header")][FromHeader] string ? myCustomHeader,
+            [Description("Pascal case")][FromQuery] string ? Pascal,
             [Description("My kebab case header")][FromHeader(Name = "my-kebab-header")] string ? myKebabHeader,
             // in
             [Description("The id")] string id, // implicitly [FromPath]
             [Description("A query string")][FromQuery] string? q,
-            [Description("My special header")][FromHeader] string? header,
+            [Description("My special header")][FromHeader] string? myCustomHeader,
             // schema
             [Description("non-nullable value type")] int value,
             [Description("nullable value type")] long? maybeValue,
             [Description("non-nullable reference type")][FromQuery] string version,
-            [Description("nullable reference type")][FromQuery] string option,
-            [Description("array")][FromQuery] string[]? tags
+            [Description("nullable reference type")][FromQuery] string ? option,
+            [Description("array")][FromQuery] string[]? tags,
+            // required
+            [Description("Required parameter")][Required] string required
         ) =>
         {
             return TypedResults.Ok("Good to go");

@@ -219,10 +219,7 @@ attribute.
 
 ### description
 
-Currently you need to use a [DocumentTransformer] or an [OperationTransformer] to set the `description` on a parameter --
-the `[Description]` attribute sets the description in the schema but not on the parameter itself.
-
-Unfortunately, some tools e.g. SwaggerUi only use the description in the parameter and ignore the one in the parameter schema.
+Use the `[Description]` attribute to set the description on the parameter object.
 
 ### required
 
