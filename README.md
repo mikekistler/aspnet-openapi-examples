@@ -110,7 +110,23 @@ set or add entries to the `document.Servers` property.
 
 ## Paths Object
 
+The `paths` object is just a map of path to `pathItem`. ASP.NET creates an entry in this map for each
+path specified on a controller class using the [`RouteAttribute`].
+
+Paths appear in the generated paths object in alphabetical order by path.
+
+OpenAPI allows specification extensions in a paths object -- these can be added with a DocumentTransformer.
+
+[`RouteAttribute`]: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.routeattribute
+
 ## Path Item Object
+
+The get, put, post, delete, patch, options, and head fields of a pathItem can be set by
+defining an endpoint method in the controller with the correspoinding HTTP method attribute, e.g. [`HttpGetAttribute`].
+
+Use a DocumentTransformer to set the summary, description, trace, servers, or parameters fields, or to add specification extensions.
+
+[`HttpGetAttribute`]: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.httpgetattribute
 
 ## Operation Object
 
