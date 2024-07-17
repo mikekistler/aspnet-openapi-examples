@@ -86,6 +86,8 @@ Use the [`RegularExpression` attribute] to set the `pattern` of a `string`.
 
 ### example / examples
 
+Currently you must use a [DocumentTransformer] to add an `example` to a the schema.
+
 ### nullable
 
 Properties defined as a nullable value type will have `"nullable": true` in the generated schema.
@@ -130,17 +132,62 @@ Use a DocumentTransformer to set the summary, description, trace, servers, or pa
 
 ## Operation Object
 
-### tag
+Each method of the controller with an Http method attribute will create an operation.
+The following operation properties can be set using attributes:
 
-### description and summary
+| to set property | use attribute |
+| --------------- | --- | ----|
+| summary | `[EndpointSummary()]` |
+| description | `[EndpointDescription()]` |
+| operationId | `[EndpointName()]` |
 
-### externalDocs
+Xml doc comments are not currently supported to set the operation summary, description,
+or descriptions on parameters.
 
-### operationId
+The tags property of the operation is set with a single tag name derived from the controller
+class name by removing the "Controller" suffix (convention).
+
+The `parameters` property of an operation is set from the parameters of the endpoint method.
+See the [Parameters / Parameter Object](#parameters-/-parameter-object) section below for details on how to set `responses`.
+
+If there is a endpoint method parameter that is explicitly or implicitly `[FromBody]`, this is used
+to set the `requestBody` property of the operation.
+
+The `responses` object is populated from the `Produces` attribute on the endpoint method.
+See the [Responses] section below for details on how to set `responses`.
+
+Use a [DocumentTransformer] or an [OperationTransformer] to set the `externalDocs`, `callbacks`, `deprecated`, `security`,
+or `servers` properties of an operation.
 
 ## Parameters / Parameter Object
 
-### style and explode
+Endpoint method parameters that are explicitly or implicitly `[FromQuery]`, `[FromPath]`, or `[FromHeader]`
+are included in the parameter list, with the `in` value set accordingly and a schema as described in the [Schemas] section above.
+
+### name
+
+The name of the parameter in the endpoint method is used as-is in the `name` field of the parameter object --
+no case-convention is applied -- but an alternate name can be specified in the parameters of the `From{Query,Path,Header}`
+attribute.
+
+### description
+
+Use the `[Description]` attribute to set the description on the parameter.
+
+### required
+
+The `required` property of a parameter can be is set to `true` for all parameters that are
+explicitly or implicitly `[FromPath]` and all parameters with the `[Required]` attribute.
+
+### schema
+
+The `schema` property of a parameter object is set as described in the [Schemas] section above.
+
+### other properties
+
+The `deprecated`, `allowEmptyValue`,`style`, `explode`, `allowReserved`, `example`, and `examples`
+properties are not currently included in parameter objects.
+Use a [DocumentTransformer] or an [OperationTransformer] to set any of these properties when needed.
 
 ## Request Body Object
 
