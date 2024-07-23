@@ -84,12 +84,33 @@ internal static class MoreSchemasApi
             return TypedResults.Ok<string>(shapeTypeName);
         });
 
+        group.MapGet("/squares",
+        () =>
+        {
+            return TypedResults.Ok(new Square { Area = 1 });
+        });
+
         group.MapPost("map-type",
         (
             [FromQuery] decimal mapped
         ) =>
         {
             return TypedResults.Ok();
+        });
+
+        group.MapGet("/pets/{type}",
+        (
+            [FromRoute] string type
+        ) =>
+        {
+            Pet pet = type switch
+            {
+                "dog" => new Dog { Name = "Fido", Age = 3, Breed = "Golden Retriever" },
+                "cat" => new Cat { Name = "Whiskers", Age = 2 },
+                "fish" => new Fish { Name = "Bubbles", Age = 1 },
+                _ => null
+            };
+            return TypedResults.Ok<Pet>(pet);
         });
 
         return group;

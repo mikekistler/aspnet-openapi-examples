@@ -39,3 +39,8 @@ Content-Type: application/json
   "color": "blue",
   "sides": 3
 }
+
+###
+
+GET {{HostAddress}}/more-schemas/squares
+Accept: application/json
