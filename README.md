@@ -191,9 +191,27 @@ Use a [DocumentTransformer] or an [OperationTransformer] to set any of these pro
 
 ## Request Body Object
 
-### Mime Type
+If there is a endpoint method parameter that is explicitly or implicitly [FromBody], this is used to set the requestBody property of the operation. By default the MIME type of the request body is "application/json", but this can be changed with the `Consumes` attribute on the endpoint method. Use `Consumes`` if you need to specify multiple MIME types.
+
+Note that if you specify `Consumes` multiple times, only the last one will be used -- they are not combined.
+
+### required
+
+The `required` property of a `requestBody` object is set to `true` if the `[FromBody]` method parameter
+is a non-nullable type. Otherwise the `required` property is omitted and defaults to `false`.
 
 ### multipart/form-data
+
+An operation that accepts "multipart/form-data" should use `Accepts` to set the correct MIME type and
+a `FromBody` method parameter with a type that defines the form-data fields.
+
+### mediaTypeObject
+
+The `content` property of the `requestBody` object is a map of MIME type to `mediaTypeObject`.
+The `schema` property of a `mediaTypeObject` is set as described above.
+
+Use a [DocumentTransformer] or an [OperationTransformer] to set the `example`, `examples`, `encoding`, or
+to add specification extensions to the `mediaTypeObject`.
 
 ## Responses
 
