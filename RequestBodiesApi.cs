@@ -7,51 +7,48 @@ internal static class RequestBodiesApi
     {
         var group = routes.MapGroup("/request-bodies");
 
-        // Tags can be set at the group (RouteGroupBuilder) level
         group.WithTags("Request Bodies");
 
+        // Route handlers can define parameters annotated with [FromBody] to bind to the request body
         group.MapPost("/json-body",
         (
-        [Description("A Json request body")] [FromBody] JsonBody body
+            [Description("A Json request body")] [FromBody] JsonBody body
         ) =>
         {
             return TypedResults.Ok("Good to go");
         });
 
+        // If the parameter is nullable, the request body is optional; required is omitted and defaults to false.
         group.MapPost("/optional-body",
         (
-        [Description("An optional Json request body")] JsonBody? body // implicitly FromBody
+            [Description("An optional Json request body")] JsonBody? body // implicitly FromBody
         ) =>
         {
             return TypedResults.Ok("Good to go");
         });
 
-        group.MapPost("/non-json-body",
+        // For non-json request bodies, the route handler can read and parse the request body directly
+        // from the HttpContext. In this case, use the Accepts extension method to specify the allowed
+        // content types and the expected type of the request body.
+        group.MapPost("/accepts",
         (
-        [Description("A non-json request body")] byte[] body
+            HttpContext context
         ) =>
         {
-            return TypedResults.Ok("Good to go");
-        })
-        .Accepts<byte[]>("application/octet-stream");
-
-        group.MapPost("/multi-content-type",
-        (
-        [Description("A multi-content-type request body")] byte[] body
-        ) =>
-        {
-            return TypedResults.Ok("Good to go");
+            return TypedResults.Ok("Good to go - " + context.Request.ContentType);
         })
         .Accepts<byte[]>("image/jpeg", "image/png", "image/tiff");
 
-        group.MapPost("/multipart",
+        // Another option for non-json request bodies is to define a custom type that implements
+        // IBindableFromHttpContext<T> and IEndpointParameterMetadataProvider. This allows the framework
+        // to bind the parameter from the request body in the HTTP context.
+        group.MapPost("/xml-body",
         (
-        [Description("A multipart request body")] JsonBody? body
+            [Description("An Xml request body")] XmlBody body
         ) =>
         {
-            return TypedResults.Ok("Good to go");
-        })
-        .Accepts<byte[]>("multi-part/form-data");
+            return TypedResults.Ok(body);
+        });
 
         return group;
     }

@@ -59,7 +59,21 @@ internal static class OperationsApi
             [Description("Required parameter")][Required] string required
         ) =>
         {
-            return TypedResults.Ok("Good to go");
+            var result = new
+            {
+                Pascal,
+                myKebabHeader,
+                id,
+                q,
+                myCustomHeader,
+                value,
+                maybeValue,
+                version,
+                option,
+                tags,
+                required
+            };
+            return TypedResults.Ok(result);
         });
 
         // Try various schema assertions

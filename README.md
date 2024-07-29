@@ -2,6 +2,8 @@
 
 <!-- cspell:ignore aspnet openapi swashbuckle -->
 
+<!-- Editorial note: use "route handler" rather than "route handler" or "endpoint method" -->
+
 Examples of using ASP.NET to create OpenAPI v3 API definitions.
 
 This guide focuses on generating OpenAPI, specifically [OpenAPI v3.0.x], from
@@ -27,8 +29,6 @@ By default in a .NET web application, property names in a schema are the camel-c
 of the class or record property name. This can be changed using the `PropertyNamingPolicy` in the
 [JsonSerializerOptions], and can be changed on an individual property with the
 [`JsonPropertyName`] attribute.
-
-[`JsonPropertyName`]: https://docs.microsoft.com/dotnet/api/system.text.json.serialization.jsonpropertynameattribute?view=net-9.0
 
 ### type and format
 
@@ -64,9 +64,7 @@ or less the same thing.
 
 ### description
 
-Use the [`Description` attribute] to set the `description` of a property.
-
-[`Description` attribute]: https://learn.microsoft.com/dotnet/api/system.componentmodel.descriptionattribute?view=net-8.0
+Use the [`Description`] attribute to set the `description` of a property.
 
 ### required
 
@@ -189,16 +187,16 @@ Note that the extension methods are supported on both `RouteHandlerBuilder` and 
 but when used on `RouteGroupBuilder` they are applied to all operations in the group,
 so it's not likely that `WithSummary`, `WithDescription`, or `WithName` should be used on a `RouteGroupBuilder`.
 
-The `parameters` property of an operation is set from the parameters of the delegate method.
-Delegate method parameters that are explicitly or implicitly `[FromQuery]`, `[FromPath]`, or `[FromHeader]`
+The `parameters` property of an operation is set from the parameters of the route handler.
+Route handler parameters that are explicitly or implicitly `[FromQuery]`, `[FromPath]`, or `[FromHeader]`
 are included in the parameter list.
 
-If there is a delegate method parameter that is explicitly or implicitly `[FromBody]`, this is used
+If there is a route handler parameter that is explicitly or implicitly `[FromBody]`, this is used
 to set the `requestBody` property of the operation.
 
 The `responses` object is populated from several sources.
 
-- the declared return value of the delegate method
+- the declared return value of the route handler
 - the `Produces` extension method on the delegate.
 
 See the [Responses] section below for details on how to set `responses`.
@@ -208,12 +206,12 @@ or `servers` properties of an operation.
 
 ## Parameters / Parameter Object
 
-Delegate method parameters that are explicitly or implicitly `[FromQuery]`, `[FromPath]`, or `[FromHeader]`
+route handler parameters that are explicitly or implicitly `[FromQuery]`, `[FromPath]`, or `[FromHeader]`
 are included in the parameter list, with the `in` value set accordingly and a schema as described in the [Schemas] section above.
 
 ### name
 
-The name of the parameter in the delegate method is used as-is in the `name` field of the parameter object --
+The name of the parameter in the route handler is used as-is in the `name` field of the parameter object --
 no case-convention is applied -- but an alternate name can be specified in the parameters of the `From{Query,Path,Header}`
 attribute.
 
@@ -232,34 +230,76 @@ The `required` property of a parameter is determined by its type:
 
 Note this differs from the way properties of a schema are determined to be required.
 
+### style and explode
+
+The `style` and `explode` properties are not explicitly specified in parameter objects
+because their default value is consistent with the behavior of ASP.NET parameter binding.
+In particular, the defaults for query parameters are `style: form, explode: true`, which
+means that each element of an array parameter is specified with its own `name=` in the query string.
+
 ### schema
 
-The `schema` property of a parameter object is set as described in the [Schemas] section above.
+The `schema` property of a parameter object is set as described in the [Schemas] section above,
+with the exception that parameter schemas never include `nullable: true`.
 
 ### other properties
 
-The `deprecated`, `allowEmptyValue`,`style`, `explode`, `allowReserved`, `example`, and `examples`
+The `deprecated`, `allowEmptyValue`, `allowReserved`, `example`, and `examples`
 properties are not currently included in parameter objects.
 Use a [DocumentTransformer] or an [OperationTransformer] to set any of these properties when needed.
 
 ## Request Body Object
 
-If there is a delegate method parameter that is explicitly or implicitly `[FromBody]`, this is used
-to set the `requestBody` property of the operation. By default the MIME type of the request body is
-`application/json`, but this can be changed with the `Accepts` extension method on the delegate method.
-Use `Accepts` if you need to specify multiple MIME types.
+If a route handler has a parameter that is explicitly or implicitly `FromBody`, this is used
+to set the `requestBody` property of the operation. The `requestBody` is also set if the route
+handler has any parameters with the `[FromForm]` attribute.
+
+It is also possible to use the [`Accepts`]  extension method to define the request body in cases where
+the route handler does not define a `FromBody` or `FromForm` parameter but accesses the request body
+from the HTTPContext. `Accepts` can specify multiple content-types and content-type ranges, e.g. "image/*".
+`Accepts` adds a filter to the route handler that checks the content-type of incoming requests and rejects
+any request that does not match one of the specified content-types.
 
 Note that if you specify `Accepts` multiple times, only the last one will be used -- they are not combined.
 
+**DO NOT** use the [`Accepts`]  extension method on a route handler with `FromBody` or `FromForm` parameters.
+The metadata set for the parameters is consistent with the parameter binding logic of ASP.NET,
+so overriding this with `Accepts` can produce an OpenAPI document that is inconsistent with the actual
+behavior of the application.
+
+### description
+
+Set the `description` field of the requestBody with a `[Description]` attribute on the `FormBody` parameter.
+
 ### required
 
-The `required` property of a `requestBody` object is set to `true` if the `[FromBody]` method parameter
-is a non-nullable type. Otherwise the `required` property is omitted and defaults to `false`.
+The `required` property of a `requestBody` object is set to `true` if the `[FromBody]` parameter
+is a non-nullable type.
+For a route handler with `[FromForm]` parameters, `required` is always set to `true` even if all
+the `[FromForm]` parameters are nullable, since this is required by ASP.NET Core.
+Otherwise the `required` property is omitted and defaults to `false`.
 
-### multipart/form-data
+### content
 
-An operation that accepts "multipart/form-data" should use `Accepts` to set the correct MIME type and
-a `FromBody` method parameter with a type that defines the form-data fields.
+`FromBody` parameters are "application/json" by default, and this support is built in to Minimal APIs.
+For non-json request bodies, the route handler can read and parse the request body directly
+from the HttpContext. In this case, use the [`Accepts`]  extension method to specify the allowed
+content types and the expected type of the request body.
+Another option for non-json request bodies is to define a custom type for the `FromBody` parameter
+that implements [`IBindableFromHttpContext<T>`] and [`IEndpointParameterMetadataProvider`].
+This allows the framework to bind the parameter from the request body in the HTTP context.
+
+#### Form bodies
+
+`FromForm` parameters may be bound from either a "multipart/form-data" or "application/x-www-form-urlencoded"
+request body, except when the route handler defines a file-type, i.e. [`IFormFile`], parameter,
+which is only supported for "multipart/form-data".
+ASP.NET sets the endpoint metadata to specify which content-types are allowed and this produces
+the appropriate `content` entries for operation in the generated OpenAPI document.
+
+The request body schema will contain a property for each FromForm parameter with a schema derived from the parameter type.
+The property name will be the same as the parameter name with no case-coercion, but this can be overridden
+with the Name parameter on FromForm, similar to the other parameter binding attributes.
 
 ### mediaTypeObject
 
@@ -273,13 +313,14 @@ to add specification extensions to the `mediaTypeObject`.
 
 Response definitions can set using any of the following approaches:
 
-- a `Produces` extension method on the endpoint
+- a [`Produces`] extension method on the endpoint
+- a [`ProducesProblem`] extension method on the endpoint for error responses
 - a `ProducesResponseType` attribute on the route handler
 - define the route handler return type to be one or more `TypedResults`
 
 See [Describe response types] in the .NET documentation for more information.
 
-[Describe response types]: https://learn.microsoft.com/aspnet/core/fundamentals/minimal-apis/openapi?view=aspnetcore-9.0#describe-response-types]
+[Describe response types]: https://learn.microsoft.com/aspnet/core/fundamentals/minimal-apis/openapi?view=aspnetcore-9.0#describe-response-types
 
 These approaches will set a numeric `statusCode`, the response MIME type (defaults to "application/json"),
 and schema of the response object.
@@ -290,7 +331,7 @@ but can be overridden with a transformer.
 
 For the `Produces` extension method and `ProducesResponseType` attribute,
 there is no validation of the type specified against the actual response object returned
-from the delegate method.
+from the route handler.
 
 Responses can also be populated from the route handler return type.
 The [`TypedResults`] class provides a set of static methods to wrap a response object and
@@ -306,7 +347,7 @@ on the handler using [`Results`]. For more information see the
 
 Note that `Results` only supports from 2 to 6 different return types. Don't use `Results` with a single return type -- it will fail to compile. Likewise, if you try to specify more than 6 return types, it will fail to compile.
 
-When the endpoint method is asynchronous, the return type must have the `Task<>` wrapper.
+When the route handler is asynchronous, the return type must have the `Task<>` wrapper.
 
 Only return types that implement `IEndpointMetadataProvider` will create a `responses` entry in the OpenAPI document.
 Here's a quick list of some of the `TypedResults` helper methods that produce a `responses` entry:
@@ -350,8 +391,8 @@ However, each of these `mediaTypeObject` entries will have the same schema, so i
 schemas for different media types, you will need to use a transformer.
 
 It is possible but currently a bit complicated to generate content entries for media types other than "application/json"
-from the return type of the endpoint method. To do this, you need to create a class that implements `IResult` and `IEndpointMetadataProvider`
-and make this class the return type of the endpoint method. There is an example of this in the [OkTextPlain] class in the
+from the return type of the route handler. To do this, you need to create a class that implements `IResult` and `IEndpointMetadataProvider`
+and make this class the return type of the route handler. There is an example of this in the [OkTextPlain] class in the
 project.
 
 Use a transformer to set the `example`, `examples`, `encoding`, or
@@ -402,8 +443,50 @@ Use a [DocumentTransformer] to add security schemes and security requirements.
 Most of the OpenApi model classes contain an "Extensions" property, and you can use a transformer to set
 specification extensions using this property.
 
+## Links to Docs on Learn
+
+- AspNetCore.Http
+  - [`Accepts`] extension method
+  - [`IBindableFromHttpContext`]
+  - [`IEndpointParameterMetadataProvider`]
+  - [`IFormFile`]
+  - [`Produces`] extension method
+  - [`ProducesProblem`] extension method
+- AspNetCore.Mvc
+  - [`FromForm`]
+- AspNetCore.OpenApi
+  - [DocumentTransformer]
+  - [OperationTransformer]
+- System.ComponentModel
+  - [`Description`] attribute
+- System.Text.Json
+  - [JsonSerializerOptions]
+  - [`JsonPropertyName`]
+
 <!-- Links -->
 
+<!-- distinguish between attributes and extension methods by wrapping attributes in brackets, where needed -->
+
+<!-- AspNetCore.Http -->
+[`Accepts`]: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.http.openapiroutehandlerbuilderextensions.accepts
+[`IBindableFromHttpContext`]: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.http.ibindablefromhttpcontext-1
+[`IEndpointParameterMetadataProvider`]: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.http.metadata.iendpointparametermetadataprovider
+[`IFormFile`]: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.http.iformfile?view=aspnetcore-9.0
+[`Produces`]: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.http.openapiroutehandlerbuilderextensions.produces
+[`ProducesProblem`]: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.http.openapiroutehandlerbuilderextensions.producesproblem
+
+<!-- AspNetCore.Mvc -->
+[`FromForm`]: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.fromformattribute?view=aspnetcore-9.0
+
+<!-- AspNetCore.OpenApi-->
 [DocumentTransformer]: https://learn.microsoft.com/aspnet/core/fundamentals/minimal-apis/aspnetcore-openapi?view=aspnetcore-9.0#openapi-document-transformers
-[OperationTransformer]: https://learn.microsoft.com/aspnet/core/fundamentals/minimal-apis/aspnetcore-openapi?view=aspnetcore-9.0#use-operation-transformers
+[OperationTransformer]: https://learn.microsoft.com/aspnet/core/fundamentals/minimal-apis/aspnetcore-openapi?view=aspnetcore-9.
+0#use-operation-transformers
+
+<!-- System.ComponentModel -->
+
+[`Description`]: https://learn.microsoft.com/dotnet/api/system.componentmodel.descriptionattribute?view=net-8.0
+
+<!-- System.Text.Json -->
 [JsonSerializerOptions]: https://docs.microsoft.com/dotnet/api/system.text.json.jsonserializeroptions?view=net-9.0
+[`JsonPropertyName`]: https://docs.microsoft.com/dotnet/api/system.text.json.serialization.jsonpropertynameattribute?view=net-9.0

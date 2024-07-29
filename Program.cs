@@ -10,6 +10,7 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 {
     // Don't serialize null values
     options.SerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+    options.SerializerOptions.PropertyNameCaseInsensitive = false;
 });
 
 // Convert exceptions to problem details responses
@@ -51,6 +52,7 @@ app.MapSchemas();
 app.MapPaths();
 app.MapOperations();
 app.MapRequestBodies();
+app.MapFormBodies();
 app.MapResponses();
 app.MapMoreSchemas();
 

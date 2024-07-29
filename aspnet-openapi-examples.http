@@ -44,3 +44,178 @@ Content-Type: application/json
 
 GET {{HostAddress}}/more-schemas/squares
 Accept: application/json
+
+###
+POST {{HostAddress}}/more-schemas/squares
+
+###
+
+# Json body
+POST {{HostAddress}}/request-bodies/json-body
+Accept: application/json
+Content-Type: application/json
+
+{
+  "prop1": "this is prop1's value"
+}
+
+###
+
+# Json body
+POST {{HostAddress}}/request-bodies/json-body
+Accept: application/json
+Content-Type: text/json
+
+{
+  "prop1": "this is prop1's value"
+}
+
+###
+
+# text/json body
+POST {{HostAddress}}/request-bodies/text-json
+Accept: application/json
+Content-Type: text/json
+
+{
+  "prop1": "this is prop1's value"
+}
+
+###
+
+# No body
+POST {{HostAddress}}/request-bodies/optional-body
+
+###
+
+# no content-type header
+POST {{HostAddress}}/request-bodies/non-json-body
+
+Hello, world!
+
+###
+
+# non-json body
+POST {{HostAddress}}/request-bodies/non-json-body
+content-type: application/octet-stream
+
+Hello, world!
+
+###
+
+# accepts
+POST {{HostAddress}}/request-bodies/accepts
+content-type: image/svg+xml
+
+Hello, world!
+
+###
+
+# mime type range
+POST {{HostAddress}}/request-bodies/mime-type-range
+content-type: text/plain
+
+Hello, world!
+
+###
+
+# Xml body
+POST {{HostAddress}}/request-bodies/xml-body
+Accept: application/json
+Content-Type: application/xml
+
+<XmlBody>
+  <prop1>Tove</prop1>
+</XmlBody>
+
+###
+
+POST {{HostAddress}}/form-bodies/from-form
+Content-Type: multipart/form-data; boundary=WebKitFormBoundary7MA4YWxkTrZu0gW
+
+--WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="name"
+Content-Type: text/plain
+
+Alfred E. Neuman
+--WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="age"
+Content-Type: text/plain
+
+42
+--WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+###
+
+# Empty body
+POST {{HostAddress}}/form-bodies/optional-body
+Content-Type: multipart/form-data; boundary=WebKitFormBoundary7MA4YWxkTrZu0gW
+
+--WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+###
+
+# No body
+POST {{HostAddress}}/form-bodies/optional-body
+
+###
+
+# xml body
+POST {{HostAddress}}/request-bodies/xml-body
+Accept: application/json
+Content-Type: application/json
+
+<XmlBody>
+  <prop1>This is prop1</prop1>
+</XmlBody>
+
+###
+
+# Form bodies
+POST {{HostAddress}}/form-bodies/from-form
+Content-Type: multipart/form-data; boundary=WebKitFormBoundary7MA4YWxkTrZu0gW
+
+--WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="name"
+Content-Type: text/plain
+
+Alfred E. Neuman
+--WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="age"
+Content-Type: text/plain
+
+42
+--WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+###
+
+# www-form-urlencoded body
+
+POST {{HostAddress}}/form-bodies/from-form
+Content-Type: application/x-www-form-urlencoded
+
+name=Alfred+E.+Neuman&age=42
+
+###
+
+# Multipart form with file
+POST {{HostAddress}}/form-bodies/with-file
+Content-Type: multipart/form-data; boundary=WebKitFormBoundary7MA4YWxkTrZu0gW
+
+--WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="name"
+Content-Type: text/plain
+
+Simone Biles
+--WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="age"
+Content-Type: text/plain
+
+27
+--WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="photo"; filename="simone.jpeg"
+Content-Type: image/jpeg
+
+< ./simone.jpeg
+--WebKitFormBoundary7MA4YWxkTrZu0gW--
+
