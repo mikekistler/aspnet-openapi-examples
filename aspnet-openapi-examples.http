@@ -44,3 +44,46 @@ Content-Type: application/json
 
 GET {{HostAddress}}/more-schemas/squares
 Accept: application/json
+
+###
+
+# Create a multipart form request
+POST {{HostAddress}}/request-bodies/multipart
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+----WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="prop1"
+Content-Type: text/plain
+
+value1
+----WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="prop2"
+Content-Type: text/plain
+
+42
+----WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="prop3"
+Content-Type: text/plain
+
+true
+
+###
+
+# Create a multipart form request
+POST {{HostAddress}}/request-bodies/from-form
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+----WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="name"
+Content-Type: text/plain
+
+Simone Biles
+----WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="age"
+
+
+----WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="prop3"
+Content-Type: text/plain
+
+true

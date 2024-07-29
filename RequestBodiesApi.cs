@@ -49,9 +49,20 @@ internal static class RequestBodiesApi
         [Description("A multipart request body")] JsonBody? body
         ) =>
         {
-            return TypedResults.Ok("Good to go");
+            return TypedResults.Ok(body);
         })
-        .Accepts<byte[]>("multi-part/form-data");
+        .Accepts<byte[]>("multipart/form-data");
+
+        group.MapPost("/from-form",
+        (
+            [Description("Name")][FromForm] string name,
+            [Description("Age")][FromForm] int age,
+            [Description("Photo")][FromForm] byte[] photo
+        ) =>
+        {
+            // Create a dynamic object to return the values
+            return TypedResults.Ok(new { name, age, photo });
+        });
 
         return group;
     }
