@@ -179,21 +179,54 @@ Use the `[Description]` attribute to set the description on the parameter.
 The `required` property of a parameter can be is set to `true` for all parameters that are
 explicitly or implicitly `[FromPath]` and all parameters with the `[Required]` attribute.
 
+### style and explode
+
+The `style` and `explode` properties are not explicitly specified in parameter objects
+because their default value is consistent with the behavior of ASP.NET parameter binding.
+In particular, the defaults for query parameters are `style: form, explode: true`, which
+means that each element of an array parameter is specified with its own `name=` in the query string.
+
 ### schema
 
 The `schema` property of a parameter object is set as described in the [Schemas] section above.
 
 ### other properties
 
-The `deprecated`, `allowEmptyValue`,`style`, `explode`, `allowReserved`, `example`, and `examples`
+The `deprecated`, `allowEmptyValue`, `allowReserved`, `example`, and `examples`
 properties are not currently included in parameter objects.
 Use a [DocumentTransformer] or an [OperationTransformer] to set any of these properties when needed.
 
 ## Request Body Object
 
-### Mime Type
+If a route handler has a parameter that is explicitly or implicitly `FromBody`, this is used
+to set the `requestBody` property of the operation. The `requestBody` is also set if the route
+handler has any parameters with the `[FromForm]` attribute.
+
+It is also possible to use the [`Consumes`]  attribute on the route handler to define the request body
+in cases where the route handler does not define a `FromBody` or `FromForm` parameter but accesses the request body
+from the HTTPContext. `Consumes` can specify multiple content-types and content-type ranges, e.g. "image/*".
+`Consumes` adds a filter to the route handler that checks the content-type of incoming requests and rejects
+any request that does not match one of the specified content-types.
+
+Note that if you specify `Consumes` multiple times, only the last one will be used -- they are not combined.
+
+### required
+
+The `required` property of a `requestBody` object is set to `true` if the `[FromBody]` method parameter
+is a non-nullable type. Otherwise the `required` property is omitted and defaults to `false`.
 
 ### multipart/form-data
+
+An operation that accepts "multipart/form-data" should use `Accepts` to set the correct MIME type and
+a `FromBody` method parameter with a type that defines the form-data fields.
+
+### mediaTypeObject
+
+The `content` property of the `requestBody` object is a map of MIME type to `mediaTypeObject`.
+The `schema` property of a `mediaTypeObject` is set as described above.
+
+Use a [DocumentTransformer] or an [OperationTransformer] to set the `example`, `examples`, `encoding`, or
+to add specification extensions to the `mediaTypeObject`.
 
 ## Responses
 
