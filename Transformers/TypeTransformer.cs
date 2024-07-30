@@ -13,12 +13,14 @@ internal static class TypeTransformer
     public static async Task TransformAsync(OpenApiSchema schema, OpenApiSchemaTransformerContext context, CancellationToken cancellationToken)
     {
         // If transforms contains the schema's type, set the schema type and format from the transform schema
+#if FALSE // comment out for now
         if (transforms.ContainsKey(context.Type))
         {
             OpenApiSchema transformedSchema = transforms[context.Type];
             schema.Type = transformedSchema.Type;
             schema.Format = transformedSchema.Format;
         }
+#endif
         return;
     }
 }
