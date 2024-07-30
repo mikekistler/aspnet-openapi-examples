@@ -258,7 +258,9 @@ is a non-nullable type. Otherwise the `required` property is omitted and default
 
 ### multipart/form-data
 
-An operation that accepts "multipart/form-data" should use `Accepts` to set the correct MIME type and
+An operation that accepts "multipart/form-data" should specify `[FromForm]` on endpoint parameters for
+the form parts. This signals ASP.NET to use
+ use `Accepts` to set the correct MIME type and
 a `FromBody` method parameter with a type that defines the form-data fields.
 
 ### mediaTypeObject
