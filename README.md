@@ -246,10 +246,12 @@ Use a [DocumentTransformer] or an [OperationTransformer] to set any of these pro
 
 If there is a delegate method parameter that is explicitly or implicitly `[FromBody]`, this is used
 to set the `requestBody` property of the operation. By default the MIME type of the request body is
-`application/json`, but this can be changed with the `Accepts` extension method on the delegate method.
+`application/json`, but this can be changed with the [`Accepts` extension method] on the delegate method.
 Use `Accepts` if you need to specify multiple MIME types.
 
 Note that if you specify `Accepts` multiple times, only the last one will be used -- they are not combined.
+
+[`Accepts` extension method]: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.http.openapiroutehandlerbuilderextensions.accepts
 
 ### required
 
@@ -258,8 +260,15 @@ is a non-nullable type. Otherwise the `required` property is omitted and default
 
 ### multipart/form-data
 
-An operation that accepts "multipart/form-data" should use `Accepts` to set the correct MIME type and
-a `FromBody` method parameter with a type that defines the form-data fields.
+An operation that accepts "multipart/form-data" should specify `[FromForm]` on endpoint parameters for
+the form parts. By default, an endpoint method with `[FromForm]` parameters will have a `requestBody`
+with two `content` entries: "multipart/form-data" and "application/x-www-form-urlencoded".
+
+The request body schema will contain a property for each FromForm parameter with a schema derived from the parameter type.
+The property name will be the same as the parameter name with no case-coercion, but this can be overridden
+with the Name parameter on FromForm, similar to the other parameter binding attributes.
+
+
 
 ### mediaTypeObject
 
@@ -273,13 +282,17 @@ to add specification extensions to the `mediaTypeObject`.
 
 Response definitions can set using any of the following approaches:
 
-- a `Produces` extension method on the endpoint
+- a [`Produces` extension method] on the endpoint
+- a [`ProducesProblem` extension method] on the endpoint for error responses
 - a `ProducesResponseType` attribute on the route handler
 - define the route handler return type to be one or more `TypedResults`
 
+[`Produces` extension method]: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.http.openapiroutehandlerbuilderextensions.produces
+[`ProducesProblem` extension method]:https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.http.openapiroutehandlerbuilderextensions.producesproblem
+
 See [Describe response types] in the .NET documentation for more information.
 
-[Describe response types]: https://learn.microsoft.com/aspnet/core/fundamentals/minimal-apis/openapi?view=aspnetcore-9.0#describe-response-types]
+[Describe response types]: https://learn.microsoft.com/aspnet/core/fundamentals/minimal-apis/openapi?view=aspnetcore-9.0#describe-response-types
 
 These approaches will set a numeric `statusCode`, the response MIME type (defaults to "application/json"),
 and schema of the response object.

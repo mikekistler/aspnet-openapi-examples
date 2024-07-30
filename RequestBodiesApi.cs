@@ -33,7 +33,7 @@ internal static class RequestBodiesApi
         {
             return TypedResults.Ok("Good to go");
         })
-        .Accepts<byte[]>("application/octet-stream");
+        .Accepts<string>("application/octet-stream");
 
         group.MapPost("/multi-content-type",
         (
@@ -43,26 +43,6 @@ internal static class RequestBodiesApi
             return TypedResults.Ok("Good to go");
         })
         .Accepts<byte[]>("image/jpeg", "image/png", "image/tiff");
-
-        group.MapPost("/multipart",
-        (
-        [Description("A multipart request body")] JsonBody? body
-        ) =>
-        {
-            return TypedResults.Ok(body);
-        })
-        .Accepts<byte[]>("multipart/form-data");
-
-        group.MapPost("/from-form",
-        (
-            [Description("Name")][FromForm] string name,
-            [Description("Age")][FromForm] int age,
-            [Description("Photo")][FromForm] byte[] photo
-        ) =>
-        {
-            // Create a dynamic object to return the values
-            return TypedResults.Ok(new { name, age, photo });
-        });
 
         return group;
     }
