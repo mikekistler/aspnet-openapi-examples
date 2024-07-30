@@ -17,8 +17,8 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 builder.Services.AddProblemDetails();
 
 builder.Services.AddOpenApi(options => {
-    options.UseTransformer<InfoTransformer>();
-    options.UseTransformer((document, context, cancellationToken) =>
+    options.AddDocumentTransformer<InfoTransformer>();
+    options.AddDocumentTransformer((document, context, cancellationToken) =>
     {
         var serverUrl = builder.WebHost.GetSetting(WebHostDefaults.ServerUrlsKey) ?? "http://localhost:5000";
         document.Servers = new List<OpenApiServer>
@@ -32,7 +32,7 @@ builder.Services.AddOpenApi(options => {
         return Task.CompletedTask;
     });
     TypeTransformer.MapType<decimal>(new OpenApiSchema { Type = "number", Format = "decimal" });
-    options.UseSchemaTransformer(TypeTransformer.TransformAsync);
+    options.AddSchemaTransformer(TypeTransformer.TransformAsync);
 });
 
 var app = builder.Build();
