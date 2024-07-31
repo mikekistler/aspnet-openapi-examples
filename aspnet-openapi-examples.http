@@ -1,73 +1,6 @@
 @HostAddress = http://localhost:5159
 
-GET {{HostAddress}}/responses/42/with-typed-results
-Accept: application/json
-
-### Get should return 404
-
-GET {{HostAddress}}/responses/999/with-typed-results
-Accept: application/json
-
-### PATCH should return 405
-
-PATCH {{HostAddress}}/responses/42/with-typed-results
-Accept: application/json
-
-
-### PUT returns 400
-
-PUT {{HostAddress}}/responses/42/with-typed-results
-
-### Return text plain
-
-GET {{HostAddress}}/responses/42/as-text
-
-### Polymorphism
-
-GET {{HostAddress}}/more-schemas/shapes?type=triangle
-Accept: application/json
-
-###
-
-POST {{HostAddress}}/more-schemas/shape-type
-Accept: application/json
-Content-Type: application/json
-
-{
-  "shapeType": "triangle",
-  "hypotenuse": 1,
-  "color": "blue",
-  "sides": 3
-}
-
-###
-
-GET {{HostAddress}}/more-schemas/squares
-Accept: application/json
-
-###
-POST {{HostAddress}}/more-schemas/squares
-
-###
-
-POST {{HostAddress}}/form-bodies/from-form
-Content-Type: multipart/form-data; boundary=WebKitFormBoundary7MA4YWxkTrZu0gW
-
---WebKitFormBoundary7MA4YWxkTrZu0gW
-Content-Disposition: form-data; name="name"
-Content-Type: text/plain
-
-Alfred E. Neuman
---WebKitFormBoundary7MA4YWxkTrZu0gW
-Content-Disposition: form-data; name="age"
-Content-Type: text/plain
-
-42
---WebKitFormBoundary7MA4YWxkTrZu0gW--
-
-###
-
-# Test missing required field
+# Test missing required form field
 
 POST {{HostAddress}}/form-bodies/from-form
 Content-Type: multipart/form-data; boundary=WebKitFormBoundary7MA4YWxkTrZu0gW
@@ -78,23 +11,3 @@ Content-Type: text/plain
 
 Alfred E. Neuman
 --WebKitFormBoundary7MA4YWxkTrZu0gW--
-
-
-###
-
-# Create a multipart form request
-POST {{HostAddress}}/form-bodies/from-form
-Content-Type: multipart/form-data; boundary=WebKitFormBoundary7MA4YWxkTrZu0gW
-
---WebKitFormBoundary7MA4YWxkTrZu0gW
-Content-Disposition: form-data; name="Name"
-Content-Type: text/plain
-
-Simone Biles
---WebKitFormBoundary7MA4YWxkTrZu0gW
-Content-Disposition: form-data; name="Age"
-Content-Type: text/plain
-
-42
---WebKitFormBoundary7MA4YWxkTrZu0gW--
-
