@@ -24,7 +24,7 @@ internal static class RequestBodiesApi
             [Description("An optional Json request body")] JsonBody? body // implicitly FromBody
         ) =>
         {
-            return TypedResults.Ok("Good to go");
+            return TypedResults.Ok("Good to go - " + (body == null ? "no body" : "body present"));
         });
 
         // For non-json request bodies, the route handler can read and parse the request body directly
