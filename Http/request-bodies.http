@@ -1,0 +1,159 @@
+@HostAddress = http://localhost:5159
+
+# This works
+
+POST {{HostAddress}}/request-bodies/no-consumes
+Accept: application/json
+Content-Type: application/xml
+
+<Body>
+  <prop1>This is prop1</prop1>
+</Body>
+
+###
+
+# This works
+
+POST {{HostAddress}}/request-bodies/no-consumes
+Accept: application/json
+Content-Type: application/json
+
+{
+  "prop1": "This is prop1"
+}
+
+###
+
+# This fails even though it is defined to work in the OpenAPI
+
+POST {{HostAddress}}/request-bodies/bad-consumes
+Accept: application/json
+Content-Type: application/json
+
+{
+  "prop1": "This is prop1"
+}
+
+###
+
+# This also fails
+
+POST {{HostAddress}}/request-bodies/bad-consumes
+Accept: application/json
+Content-Type: application/pdf
+
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] >>
+endobj
+xref
+0 4
+0000000000 65535 f
+0000000010 00000 n
+0000000061 00000 n
+0000000116 00000 n
+trailer
+<< /Size 4 /Root 1 0 R >>
+startxref
+171
+%%EOF
+
+###
+
+# This works
+
+POST {{HostAddress}}/request-bodies/consumes-json
+Accept: application/json
+Content-Type: application/json
+
+{
+  "prop1": "This is prop1"
+}
+
+###
+
+# This fails with a 415 Unsupported Media Type
+
+POST {{HostAddress}}/request-bodies/consumes-json
+Accept: application/json
+Content-Type: text/json
+
+{
+  "prop1": "This is prop1"
+}
+
+###
+
+# This fails with a 415 Unsupported Media Type
+
+POST {{HostAddress}}/request-bodies/consumes-json
+Accept: application/json
+Content-Type: application/foobar+json
+
+{
+  "prop1": "This is prop1"
+}
+
+###
+
+POST {{HostAddress}}/request-bodies/xml-body
+Accept: application/json
+Content-Type: application/xml
+
+<XmlBody>
+  <prop1>This is prop1</prop1>
+</XmlBody>
+
+###
+
+POST {{HostAddress}}/request-bodies/xml-body
+Accept: application/json
+Content-Type: application/foobar+xml
+
+<XmlBody>
+  <prop1>This is prop1</prop1>
+</XmlBody>
+
+###
+
+# This fails with 415 Unsupported Media Type
+
+POST {{HostAddress}}/request-bodies/xml-body
+Accept: application/json
+Content-Type: text/xml
+
+<XmlBody>
+  <prop1>This is prop1</prop1>
+</XmlBody>
+
+###
+
+POST {{HostAddress}}/request-bodies/text-body
+Accept: application/json
+Content-Type: text/plain
+
+Hello, World!
+
+###
+
+POST {{HostAddress}}/request-bodies/stream-body
+Accept: application/json
+Content-Type: application/octet-stream
+
+Hello, World!
+
+###
+
+POST {{HostAddress}}/request-bodies/from-context
+Accept: application/json
+Content-Type: application/octet-stream
+
+Hello, World!
+
+###

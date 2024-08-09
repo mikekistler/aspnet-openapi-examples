@@ -48,8 +48,8 @@ The JSON Schema library maps standard C# types to OpenAPI `type` and `format` as
 | TimeOnly       | string         | time             |
 | Uri            | string         | uri              |
 | Guid           | string         | uuid             |
-| object         | &lt.omitted&gt. |                 |
-| dynamic        | &lt.omitted&gt. |                 |
+| object         | _omitted_      |                  |
+| dynamic        | _omitted_      |                  |
 
 The `type` and `format` can also be set with a [Schema Transformer].
 
@@ -198,22 +198,46 @@ Use a [DocumentTransformer] or an [OperationTransformer] to set any of these pro
 
 ## Request Body Object
 
-If a route handler has a parameter that is explicitly or implicitly `FromBody`, this is used
-to set the `requestBody` property of the operation. The `requestBody` is also set if the route
-handler has any parameters with the `[FromForm]` attribute.
+If a route handler has a parameter that is explicitly or implicitly [FromBody] or an explicit
+[FromForm] parameter, this is used to set the `requestBody` property of the operation.
 
-It is also possible to use the [`Consumes`]  attribute on the route handler to define the request body
-in cases where the route handler does not define a `FromBody` or `FromForm` parameter but accesses the request body
-from the HTTPContext. `Consumes` can specify multiple content-types and content-type ranges, e.g. "image/*".
-`Consumes` adds a filter to the route handler that checks the content-type of incoming requests and rejects
-any request that does not match one of the specified content-types.
+If the [FromBody] or [FromForm] parameter has a [Description] attribute, this description
+is included in the requestBody in the generated OpenAPI document.
 
-Note that if you specify `Consumes` multiple times, only the last one will be used -- they are not combined.
+If the [FromBody] parameter is non-nullable, the requestBody is required and this is indicated
+in the generated OpenAPI document. Form bodies are always required.
 
-### required
+In a controller-based API, ASP.NET uses an [InputFormatter] to deserialize the request body,
+so the content entries in the `requestBody` object are based on the input formatters that are
+configured for the application. ASP.NET Core MVC includes built-in input formatters for JSON and XML,
+though only the JSON input formatter is enabled by default.
 
-The `required` property of a `requestBody` object is set to `true` if the `[FromBody]` method parameter
-is a non-nullable type. Otherwise the `required` property is omitted and defaults to `false`.
+A route handler without a [Consumes] filter will accept any content type
+for which an available input formatter handles the type of the [FromBody] parameter.
+In this case, the requestBody in the generated OpenAPI document will contain all the content types
+for input formatters that can handle the [FromBody] parameter type.
+The built-in JSON input formatter supports the "application/json", "text/json", and "application/*+json" content types.
+The built-in XML input formatter supports the "application/xml", "text/xml", and "application/*+xml" content types.
+
+You can use a [Consumes] filter, which is configured with the `[Consumes]` attribute, to restrict the content
+types that a route handler will accept.
+
+Note that [Consumes] filters cannot add support for a content type
+that is not already supported by an input formatter. In this scenario, the requestBody in the
+generated OpenAPI document will claim to support "application/json" and _not_ the content type
+specified in the Consumes filter. However, a request with either content type will fail
+at runtime with a 415 Unsupported Media Type response.
+
+Note that the JSON and XML input formatters can handle the string type, so you must specify
+a Consumes filter to restrict the content type to "text/plain" if that is desired.
+
+For content types other than JSON or XML, you need to create a custom input formatter.
+For more detailed information and examples, you can refer to the [Custom formatters in ASP.NET Core
+Web API](https://learn.microsoft.com/aspnet/core/web-api/advanced/custom-formatters) documentation.
+
+If the route handler does not have a [FromBody] or [FromForm] parameter, the route handler may read
+the request body directly from the `Request.Body` stream and may use the Consumes attribute to
+restrict the content types allowed, but no requestBody is generated in the OpenAPI document.
 
 ### multipart/form-data
 
@@ -255,3 +279,7 @@ to add specification extensions to the `mediaTypeObject`.
 ## securityDefinitions / securitySchemes
 
 ## Specification Extensions
+
+<!-- Links -->
+
+[`Consumes`]: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.consumesattribute

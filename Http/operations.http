@@ -1,0 +1,9 @@
+@HostAddress = http://localhost:5159
+
+###
+
+POST {{HostAddress}}/operations/{42}/parameters?Pascal=Not+Cool&Q=whahoo&required=true&value=42&version=1.0
+Content-Type: application/json
+my-kebab-header: my-kebab-value
+myCustomHeader: myCustomHeaderValue
+

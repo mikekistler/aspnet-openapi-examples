@@ -1,0 +1,1014 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "aspnet-openapi-examples | v1",
+    "description": "# Examples of using ASP.NET to create OpenAPI v3 API definitions\n\nThis is an example of the info.description content. This description and most other\ndescription fields in OpenAPI v3.x support [CommonMark] markdown content.\n\n[CommonMark]: https://spec.commonmark.org/\n\nBelow are examples of the CommonMark markdown elements.\n\n## Headings\n\n### H3\n\n## Text styling\n\n**bold text**\n\n*italicized text*\n\n> blockquote\n\n`code`\n\n## Lists\n\n### Ordered List\n\n1. First item\n2. Second item\n3. Third item\n\n### Unordered List\n\n- First item\n- Second item\n- Third item\n\n## Horizontal Rule\n\n---\n\n### Links\n\n[Markdown Guide](https://www.markdownguide.org)\n\n### Image\n\n![alt text](https://www.markdownguide.org/assets/images/tux.png)\n\n### Table\n\n| Syntax | Description |\n| ----------- | ----------- |\n| Header | Title |\n| Paragraph | Text |\n\n### Fenced Code Block\n\n```\n{\n\"firstName\": \"John\",\n\"lastName\": \"Smith\",\n\"age\": 25\n}\n```\n",
+    "contact": {
+      "name": "Contoso Admin",
+      "url": "https://contoso.com/contacts",
+      "email": "admin@contoso.com"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    },
+    "version": "1.0.0",
+    "x-my-extension": "my-extension-value"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5000",
+      "description": "Local development server"
+    }
+  ],
+  "paths": {
+    "/request-bodies/no-consumes": {
+      "post": {
+        "tags": [
+          "RequestBodies"
+        ],
+        "requestBody": {
+          "description": "The request body",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Body"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Body"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Body"
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/Body"
+              }
+            },
+            "text/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/Body"
+              }
+            },
+            "application/*+xml": {
+              "schema": {
+                "$ref": "#/components/schemas/Body"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/request-bodies/consumes-json": {
+      "post": {
+        "tags": [
+          "RequestBodies"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Body"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Body"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/request-bodies/bad-consumes": {
+      "post": {
+        "tags": [
+          "RequestBodies"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Body"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/request-bodies/xml-body": {
+      "post": {
+        "tags": [
+          "RequestBodies"
+        ],
+        "requestBody": {
+          "description": "An Xml request body",
+          "content": {
+            "application/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/XmlBody"
+              }
+            },
+            "application/*+xml": {
+              "schema": {
+                "$ref": "#/components/schemas/XmlBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/request-bodies/text-body": {
+      "post": {
+        "tags": [
+          "RequestBodies"
+        ],
+        "requestBody": {
+          "content": {
+            "text/plain": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/request-bodies/stream-body": {
+      "post": {
+        "tags": [
+          "RequestBodies"
+        ],
+        "requestBody": {
+          "content": {
+            "application/octet-stream": {
+              "schema": {
+                "$ref": "#/components/schemas/Stream"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/request-bodies/from-context": {
+      "post": {
+        "tags": [
+          "RequestBodies"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/data-types": {
+      "get": {
+        "tags": [
+          "DataTypes"
+        ],
+        "operationId": "GetDataTypes",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/DataTypes"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DataTypes"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DataTypes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/form-bodies/from-form": {
+      "post": {
+        "tags": [
+          "FormBodies"
+        ],
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "allOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "age": {
+                        "type": "integer",
+                        "format": "int32"
+                      }
+                    }
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "Pascal": {
+                        "type": "integer",
+                        "format": "int32",
+                        "nullable": true
+                      }
+                    }
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "other-name": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                ]
+              },
+              "encoding": {
+                "application/x-www-form-urlencoded": {
+                  "style": "form",
+                  "explode": true
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/operations/attributes": {
+      "post": {
+        "tags": [
+          "Tag1",
+          "Tag2"
+        ],
+        "summary": "Operation summary from attribute",
+        "description": "Operation description from attribute",
+        "operationId": "FromAttributes",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "description": "Parameter description from attribute",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/operations/xmldoc": {
+      "post": {
+        "tags": [
+          "Operations"
+        ],
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/operations/{id}/parameters": {
+      "post": {
+        "tags": [
+          "Operations"
+        ],
+        "parameters": [
+          {
+            "name": "Pascal",
+            "in": "query",
+            "description": "Pascal case",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "my-kebab-header",
+            "in": "header",
+            "description": "My kebab case header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "description": "A query string",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "mySpecialHeader",
+            "in": "header",
+            "description": "My special header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "value",
+            "in": "query",
+            "description": "non-nullable value type",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "maybeValue",
+            "in": "query",
+            "description": "nullable value type",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "nullable": true
+            }
+          },
+          {
+            "name": "version",
+            "in": "query",
+            "description": "non-nullable reference type",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "option",
+            "in": "query",
+            "description": "nullable reference type",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "tags",
+            "in": "query",
+            "description": "array",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "nullable": true
+            }
+          },
+          {
+            "name": "required",
+            "in": "query",
+            "description": "required",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/paths/{id}": {
+      "get": {
+        "tags": [
+          "Paths"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Paths"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Paths"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Paths"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Paths"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "options": {
+        "tags": [
+          "Paths"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "Paths"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/responses": {
+      "get": {
+        "tags": [
+          "Responses"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": { }
+            }
+          }
+        }
+      }
+    },
+    "/responses/multiple": {
+      "get": {
+        "tags": [
+          "Responses"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": { }
+            }
+          }
+        }
+      }
+    },
+    "/schemas": {
+      "get": {
+        "tags": [
+          "Schemas"
+        ],
+        "operationId": "GetSchemas",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Schemas"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Schemas"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Schemas"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Body": {
+        "type": "object",
+        "properties": {
+          "prop1": {
+            "type": "string"
+          },
+          "prop2": {
+            "type": "string",
+            "nullable": true
+          },
+          "prop3": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "DataTypes": {
+        "type": "object",
+        "properties": {
+          "int": {
+            "type": "integer",
+            "description": "type: integer, format: int32",
+            "format": "int32"
+          },
+          "long": {
+            "type": "integer",
+            "description": "type: integer, format: int64",
+            "format": "int64"
+          },
+          "short": {
+            "type": "integer",
+            "description": "type: integer, format: int16",
+            "format": "int16"
+          },
+          "float": {
+            "type": "number",
+            "description": "type: number, format: float",
+            "format": "float"
+          },
+          "double": {
+            "type": "number",
+            "description": "type: integer, format: double",
+            "format": "double"
+          },
+          "bool": {
+            "type": "boolean",
+            "description": "type: boolean"
+          },
+          "string": {
+            "type": "string",
+            "description": "type: string"
+          },
+          "char": {
+            "maxLength": 1,
+            "minLength": 1,
+            "type": "string",
+            "description": "type: string, format: char",
+            "format": "char"
+          },
+          "byte": {
+            "type": "integer",
+            "description": "type: string, format: uint8",
+            "format": "uint8"
+          },
+          "byteArray": {
+            "type": "string",
+            "description": "type: string, format: byte",
+            "format": "byte"
+          },
+          "decimal": {
+            "type": "number",
+            "format": "double"
+          },
+          "object": {
+            "description": "type is omitted"
+          },
+          "dynamic": {
+            "description": "type is omitted"
+          },
+          "dateTimeOffset": {
+            "type": "string",
+            "description": "type: string, format: date-time",
+            "format": "date-time"
+          },
+          "dateOnly": {
+            "type": "string",
+            "description": "type: string, format: date",
+            "format": "date"
+          },
+          "timeOnly": {
+            "type": "string",
+            "description": "type: string, format: time",
+            "format": "time"
+          },
+          "uri": {
+            "type": "string",
+            "description": "type: string, format: uri",
+            "format": "uri"
+          },
+          "uuid": {
+            "type": "string",
+            "description": "type: string, format: uuid",
+            "format": "uuid"
+          }
+        }
+      },
+      "DayOfTheWeek": {
+        "type": "integer"
+      },
+      "DayOfTheWeekAsString": {
+        "enum": [
+          "Sunday",
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday"
+        ]
+      },
+      "Nested": {
+        "required": [
+          "date",
+          "temperatureC",
+          "summary"
+        ],
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date"
+          },
+          "temperatureC": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "summary": {
+            "type": "string",
+            "nullable": true
+          },
+          "temperatureF": {
+            "type": "integer",
+            "description": "Temp in Farenheit",
+            "format": "int32"
+          }
+        },
+        "description": "Nested schema"
+      },
+      "Schemas": {
+        "required": [
+          "requiredModifier",
+          "requiredAttribute"
+        ],
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string",
+            "description": "Properties with the Description attribute have a description in the generated schema"
+          },
+          "requiredModifier": {
+            "type": "integer",
+            "description": "Properties with the required modifier are required in the generated schema",
+            "format": "int32"
+          },
+          "requiredAttribute": {
+            "type": "integer",
+            "description": "Properties with the Required attribute are _not_ required in the generated schema",
+            "format": "int32"
+          },
+          "default": {
+            "type": "integer",
+            "description": "Properties with a default value do _not_ have a default in the generated schema",
+            "format": "int32"
+          },
+          "defaultValueAttribute": {
+            "type": "integer",
+            "description": "Properties with a DefaultValue attribute have a default in the generated schema",
+            "format": "int32",
+            "default": 42
+          },
+          "intWithRange": {
+            "maximum": 2147483647,
+            "minimum": 1,
+            "type": "integer",
+            "format": "int32"
+          },
+          "doubleWithRange": {
+            "maximum": 1,
+            "minimum": 0,
+            "type": "number",
+            "format": "double"
+          },
+          "stringWithMaxLength": {
+            "maxLength": 63,
+            "type": "string"
+          },
+          "stringWithMinLength": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "stringWithPattern": {
+            "pattern": "^[A-Za-z0-9-]*$",
+            "type": "string"
+          },
+          "nonNullableRef": {
+            "type": "string"
+          },
+          "nullableRef": {
+            "type": "string",
+            "nullable": true
+          },
+          "nonNullableValue": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nullableValue": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "computedProperty": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "readOnlyProperty": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "enum": {
+            "$ref": "#/components/schemas/DayOfTheWeek"
+          },
+          "enumAsString": {
+            "$ref": "#/components/schemas/DayOfTheWeekAsString"
+          },
+          "allowedValues": {
+            "type": "string"
+          },
+          "inner": {
+            "$ref": "#/components/schemas/Nested"
+          }
+        }
+      },
+      "Stream": {
+        "type": "string",
+        "format": "binary"
+      },
+      "XmlBody": {
+        "type": "object",
+        "properties": {
+          "prop1": {
+            "type": "string"
+          },
+          "prop2": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "prop3": {
+            "type": "boolean",
+            "nullable": true
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "RequestBodies"
+    },
+    {
+      "name": "DataTypes"
+    },
+    {
+      "name": "FormBodies"
+    },
+    {
+      "name": "Tag1"
+    },
+    {
+      "name": "Tag2"
+    },
+    {
+      "name": "Operations"
+    },
+    {
+      "name": "Paths"
+    },
+    {
+      "name": "Responses"
+    },
+    {
+      "name": "Schemas"
+    }
+  ]
+}

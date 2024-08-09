@@ -1,0 +1,35 @@
+@HostAddress = http://localhost:5159
+
+GET {{HostAddress}}/responses/42/with-typed-results
+Accept: application/json
+
+### Get should return 404
+
+GET {{HostAddress}}/responses/999/with-typed-results
+Accept: application/json
+
+### PATCH should return 405
+
+PATCH {{HostAddress}}/responses/42/with-typed-results
+Accept: application/json
+
+### PUT returns 400
+
+PUT {{HostAddress}}/responses/42/with-typed-results
+
+### Return text plain
+
+GET {{HostAddress}}/responses/42/as-text
+
+###
+
+# xml body
+POST {{HostAddress}}/request-bodies/xml-body
+Accept: application/json
+Content-Type: application/json
+
+<XmlBody>
+  <prop1>This is prop1</prop1>
+</XmlBody>
+
+###
