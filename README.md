@@ -333,6 +333,9 @@ For the `Produces` extension method and `ProducesResponseType` attribute,
 there is no validation of the type specified against the actual response object returned
 from the route handler.
 
+The `ProducesProblem` extension method will add an entry to `responses` for the specified status code
+with an "application/problem+json" content entry with a schema for the [`ProblemDetails`] class.
+
 Responses can also be populated from the route handler return type.
 The [`TypedResults`] class provides a set of static methods to wrap a response object and
 define a corresponding operation response.
@@ -477,6 +480,7 @@ specification extensions using this property.
 
 <!-- AspNetCore.Mvc -->
 [`FromForm`]: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.fromformattribute?view=aspnetcore-9.0
+[`ProblemDetails`]: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.problemdetails?view=aspnetcore-8.0
 
 <!-- AspNetCore.OpenApi-->
 [DocumentTransformer]: https://learn.microsoft.com/aspnet/core/fundamentals/minimal-apis/aspnetcore-openapi?view=aspnetcore-9.0#openapi-document-transformers
