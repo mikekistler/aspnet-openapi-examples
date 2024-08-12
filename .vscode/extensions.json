@@ -1,0 +1,8 @@
+{
+    "recommendations": [
+        "ms-dotnettools.csdevkit",
+        "davidanson.vscode-markdownlint",
+        "42crunch.vscode-openapi",
+        "stoplight.spectral"
+    ]
+}
