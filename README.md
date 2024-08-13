@@ -3,6 +3,8 @@
 <!-- cspell:ignore aspnet openapi swashbuckle -->
 
 <!-- Editorial note: use "route handler" rather than "route handler" or "endpoint method" -->
+<!-- Only use "code style" for OpenAPI fields - use links for C#/.NET classes/methods/properties -->
+<!-- Wrap attribute names in brackets -->
 
 Examples of using ASP.NET to create OpenAPI v3 API definitions.
 
@@ -26,9 +28,9 @@ to also create schema properties for fields.
 ### property names
 
 By default in a .NET web application, property names in a schema are the camel-case form
-of the class or record property name. This can be changed using the `PropertyNamingPolicy` in the
+of the class or record property name. This can be changed using the [PropertyNamingPolicy] in the
 [JsonSerializerOptions], and can be changed on an individual property with the
-[`JsonPropertyName`] attribute.
+[\[JsonPropertyName\]] attribute.
 
 ### type and format
 
@@ -52,59 +54,51 @@ The JSON Schema library maps standard C# types to OpenAPI `type` and `format` as
 | TimeOnly       | string         | time             |
 | Uri            | string         | uri              |
 | Guid           | string         | uuid             |
-| object         | &lt.omitted&gt. |                 |
-| dynamic        | &lt.omitted&gt. |                 |
+| object         | _omitted_      |                  |
+| dynamic        | _omitted_      |                  |
 
 The `type` and `format` can also be set with a [Schema Transformer].
 
-Swashbuckle provides the `MapType` method on the `AddSwaggerGen` options to customize the
+Swashbuckle provides the [MapType method on the AddSwaggerGen] options to customize the
 `type` and `format` for a C# type.
-The examples project includes a schema transformer called `TypeTransformer` that does more
-or less the same thing.
+The examples project includes a schema transformer called [TypeTransformer](./Transformers/TypeTransformer.cs)
+that does more or less the same thing.
+
+[MapType method on the AddSwaggerGen]: https://github.com/domaindrivendev/Swashbuckle.AspNetCore?tab=readme-ov-file#override-schema-for-specific-types
 
 ### description
 
-Use the [`Description`] attribute to set the `description` of a property.
+Use the [\[Description\]] attribute to set the `description` of a property.
 
 ### required
 
-Properties with either the [required modifier] or the [Required attribute] are required in the generated schema.
+Properties with either the [required] modifier or the [\[Required\]] attribute are required in the generated schema.
 
 Required properties in a record constructor are also required in the generated schema.
 
-[required modifier]: https://learn.microsoft.com/dotnet/csharp/language-reference/proposals/csharp-11.0/required-members#required-modifier
-[Required attribute]: https://learn.microsoft.com/dotnet/api/system.componentmodel.dataannotations.requiredattribute
+[required]: https://learn.microsoft.com/dotnet/csharp/language-reference/proposals/csharp-11.0/required-members#required-modifier
 
 ### default
 
-Use the [`DefaultValue` attribute] to set the `default` value of a property in the schema.
+Use the [\[DefaultValue\]] attribute to set the `default` value of a property in the schema.
 
 Note that properties with a default value do _not_ have a default in the generated schema.
 
-[`DefaultValue` attribute]: https://learn.microsoft.com/dotnet/api/system.componentmodel.defaultvalueattribute
-
 ### minimum and maximum
 
-Use the [`Range` attribute] to set the `minimum` and `maximum` values of an `integer`, or `number`.
+Use the [\[Range\]] attribute to set the `minimum` and `maximum` values of an `integer`, or `number`.
 
-[`Range` attribute]: https://learn.microsoft.com/dotnet/api/system.componentmodel.dataannotations.rangeattribute
-
-From the docs, it looks like it should be possible to use `Range` with `DateTimeOffset` properties, but it doesn't seem to work.
+From the docs, it looks like it should be possible to use [\[Range\]] with [DateTimeOffset] properties, but it doesn't seem to work.
 
 Also, there does not seem to be a way to produce just `minimum` or `maximum` without the other.
 
 ### minLength and maxLength
 
-Use the [`MinLength` attribute] and [`MaxLength` attribute] to set the `minLength` and `maxLength` of a `string`.
-
-[`MinLength` attribute]: https://learn.microsoft.com/dotnet/api/system.componentmodel.dataannotations.minlengthattribute
-[`MaxLength` attribute]: https://learn.microsoft.com/dotnet/api/system.componentmodel.dataannotations.maxlengthattribute
+Use the [\[MinLength\]] attribute and [\[MaxLength\]] attribute to set the `minLength` and `maxLength` of a `string`.
 
 ### pattern
 
-Use the [`RegularExpression` attribute] to set the `pattern` of a `string`.
-
-[`RegularExpression` attribute]: https://learn.microsoft.com/dotnet/api/system.componentmodel.dataannotations.regularexpressionattribute
+Use the [\[RegularExpression\]] attribute to set the `pattern` of a `string`.
 
 ### example
 
@@ -126,15 +120,10 @@ Properties with an `enum` type are represented as an `enum` in the generated sch
 integer-based, the property is defined with `type: integer` and `format: int32`, and
 the `enum` values are the implicit or explicit values of the C# enum.
 
-To get string-based enums, you can use the [`JsonConverter` attribute] with a [`JsonStringEnumConverter`]
+To get string-based enums, you can use the [\[JsonConverter\]] attribute with a [\[JsonStringEnumConverter\]]
 on a regular C# enum type.
 
-[`JsonConverter` attribute]: https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonconverterattribute
-[`JsonStringEnumConverter`]: https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonstringenumconverter
-
-Note: the [`AllowedValues` attribute] does not set the `enum` values of a property.
-
-[`AllowedValues` attribute]: https://learn.microsoft.com/dotnet/api/system.componentmodel.dataannotations.allowedvaluesattribute`]
+Note: the [\[AllowedValues\]] attribute does not set the `enum` values of a property.
 
 ## Info
 
@@ -178,26 +167,26 @@ can be set using attributes or extension methods:
 
 | to set property | use extension method | or attribute |
 | --------------- | --- | ----|
-| summary | WithSummary | `[EndpointSummary()]` |
-| description | WithDescription | `[EndpointDescription()]` |
-| operationId | WithName | `[EndpointName()]` |
-| tags | WithTags | |
+| `summary` | [WithSummary] | [\[EndpointSummary()\]] |
+| `description` | [WithDescription] | [\[EndpointDescription()\]] |
+| `operationId` | [WithName] | [\[EndpointName()\]] |
+| `tags` | [WithTags] | |
 
-Note that the extension methods are supported on both `RouteHandlerBuilder` and on `RouteGroupBuilder`,
-but when used on `RouteGroupBuilder` they are applied to all operations in the group,
-so it's not likely that `WithSummary`, `WithDescription`, or `WithName` should be used on a `RouteGroupBuilder`.
+Note that the extension methods are supported on both [RouteHandlerBuilder] and on [RouteGroupBuilder],
+but when used on [RouteGroupBuilder] they are applied to all operations in the group,
+so it's not likely that [WithSummary], [WithDescription], or [WithName] should be used on a [RouteGroupBuilder].
 
 The `parameters` property of an operation is set from the parameters of the route handler.
-Route handler parameters that are explicitly or implicitly `[FromQuery]`, `[FromPath]`, or `[FromHeader]`
+Route handler parameters that are explicitly or implicitly [FromQuery], [FromPath], or [FromHeader]
 are included in the parameter list.
 
-If there is a route handler parameter that is explicitly or implicitly `[FromBody]`, this is used
+If there is a route handler parameter that is explicitly or implicitly [FromBody], this is used
 to set the `requestBody` property of the operation.
 
 The `responses` object is populated from several sources.
 
 - the declared return value of the route handler
-- the `Produces` extension method on the delegate.
+- the [Produces] extension method on the delegate.
 
 See the [Responses] section below for details on how to set `responses`.
 
@@ -206,18 +195,18 @@ or `servers` properties of an operation.
 
 ## Parameters / Parameter Object
 
-route handler parameters that are explicitly or implicitly `[FromQuery]`, `[FromPath]`, or `[FromHeader]`
+route handler parameters that are explicitly or implicitly [FromQuery], [FromPath], or [FromHeader]
 are included in the parameter list, with the `in` value set accordingly and a schema as described in the [Schemas] section above.
 
 ### name
 
 The name of the parameter in the route handler is used as-is in the `name` field of the parameter object --
-no case-convention is applied -- but an alternate name can be specified in the parameters of the `From{Query,Path,Header}`
+no case-convention is applied -- but an alternate name can be specified in the parameters of the From{Query,Path,Header}
 attribute.
 
 ### description
 
-Use the `[Description]` attribute to set the description on the parameter object.
+Use the [\[Description\]] attribute to set the description on the parameter object.
 
 ### required
 
@@ -250,30 +239,30 @@ Use a [DocumentTransformer] or an [OperationTransformer] to set any of these pro
 
 ## Request Body Object
 
-If a route handler has a parameter that is explicitly or implicitly `FromBody`, this is used
+If a route handler has a parameter that is explicitly or implicitly [FromBody], this is used
 to set the `requestBody` property of the operation. The `requestBody` is also set if the route
-handler has any parameters with the `[FromForm]` attribute.
+handler has any parameters with the [FromForm] attribute.
 
-It is also possible to use the [`Accepts`]  extension method to define the request body in cases where
-the route handler does not define a `FromBody` or `FromForm` parameter but accesses the request body
-from the HTTPContext. `Accepts` can specify multiple content-types and content-type ranges, e.g. "image/*".
-`Accepts` adds a filter to the route handler that checks the content-type of incoming requests and rejects
+It is also possible to use the [Accepts]  extension method to define the request body in cases where
+the route handler does not define a `FromBody` or [FromForm] parameter but accesses the request body
+from the HTTPContext. Accepts can specify multiple content-types and content-type ranges, e.g. "image/*".
+Accepts adds a filter to the route handler that checks the content-type of incoming requests and rejects
 any request that does not match one of the specified content-types.
 
-Note that if you specify `Accepts` multiple times, only the last one will be used -- they are not combined.
+Note that if you specify Accepts multiple times, only the last one will be used -- they are not combined.
 
-**DO NOT** use the [`Accepts`]  extension method on a route handler with `FromBody` or `FromForm` parameters.
+**DO NOT** use the [Accepts]  extension method on a route handler with [FromBody] or [FromForm] parameters.
 The metadata set for the parameters is consistent with the parameter binding logic of ASP.NET,
-so overriding this with `Accepts` can produce an OpenAPI document that is inconsistent with the actual
+so overriding this with Accepts can produce an OpenAPI document that is inconsistent with the actual
 behavior of the application.
 
 ### description
 
-Set the `description` field of the requestBody with a `[Description]` attribute on the `FormBody` parameter.
+Set the `description` field of the requestBody with a [\[Description\]] attribute on the [FormBody] parameter.
 
 ### required
 
-The `required` property of a `requestBody` object is set to `true` if the `[FromBody]` parameter
+The `required` property of a `requestBody` object is set to `true` if the [FromBody] parameter
 is a non-nullable type.
 For a route handler with `[FromForm]` parameters, `required` is always set to `true` even if all
 the `[FromForm]` parameters are nullable, since this is required by ASP.NET Core.
@@ -283,16 +272,16 @@ Otherwise the `required` property is omitted and defaults to `false`.
 
 `FromBody` parameters are "application/json" by default, and this support is built in to Minimal APIs.
 For non-json request bodies, the route handler can read and parse the request body directly
-from the HttpContext. In this case, use the [`Accepts`]  extension method to specify the allowed
+from the HttpContext. In this case, use the [Accepts]  extension method to specify the allowed
 content types and the expected type of the request body.
-Another option for non-json request bodies is to define a custom type for the `FromBody` parameter
-that implements [`IBindableFromHttpContext<T>`] and [`IEndpointParameterMetadataProvider`].
+Another option for non-json request bodies is to define a custom type for the [FromBody] parameter
+that implements [IBindableFromHttpContext\<T\>] and [IEndpointParameterMetadataProvider].
 This allows the framework to bind the parameter from the request body in the HTTP context.
 
 #### Form bodies
 
-`FromForm` parameters may be bound from either a "multipart/form-data" or "application/x-www-form-urlencoded"
-request body, except when the route handler defines a file-type, i.e. [`IFormFile`], parameter,
+[FromForm] parameters may be bound from either a "multipart/form-data" or "application/x-www-form-urlencoded"
+request body, except when the route handler defines a file-type, i.e. [IFormFile], parameter,
 which is only supported for "multipart/form-data".
 ASP.NET sets the endpoint metadata to specify which content-types are allowed and this produces
 the appropriate `content` entries for operation in the generated OpenAPI document.
@@ -313,7 +302,7 @@ to add specification extensions to the `mediaTypeObject`.
 
 Response definitions can set using any of the following approaches:
 
-- a [`Produces`] extension method on the endpoint
+- a [Produces] extension method on the endpoint
 - a [`ProducesProblem`] extension method on the endpoint for error responses
 - a `ProducesResponseType` attribute on the route handler
 - define the route handler return type to be one or more `TypedResults`
@@ -329,12 +318,12 @@ such as "default" or "4XX".
 The response `description` (which is required) is set to a standard value based on the status code,
 but can be overridden with a transformer.
 
-For the `Produces` extension method and `ProducesResponseType` attribute,
+For the [Produces] extension method and `ProducesResponseType` attribute,
 there is no validation of the type specified against the actual response object returned
 from the route handler.
 
 The `ProducesProblem` extension method will add an entry to `responses` for the specified status code
-with an "application/problem+json" content entry with a schema for the [`ProblemDetails`] class.
+with an "application/problem+json" content entry with a schema for the [ProblemDetails] class.
 
 Responses can also be populated from the route handler return type.
 The [`TypedResults`] class provides a set of static methods to wrap a response object and
@@ -376,27 +365,30 @@ section below for information about how to produce content entries for other sta
 You can implement your own class to set the endpoint metadata that is used to create a `response` object.
 The examples project contains two classes that illustrate this:
 
-- The `OkTextPlain` class creates a 200 response and sets the MIME type to "text/plain".
-- The `OkImage` class also creates a 200 response with three `content` entries for "image/jpeg", "image/png", and "image/tiff".
+- The [OkTextPlain] class creates a 200 response and sets the MIME type to "text/plain".
+- The [OkImage] class also creates a 200 response with three `content` entries for "image/jpeg", "image/png", and "image/tiff".
 
-Note that the `CreatedAtRoute` and `AcceptedAtRoute` methods do not set the `Location` header in the response object.
+Note that the [CreatedAtRoute] and [AcceptedAtRout] methods do not define a `Location` header in the response object.
 
-To return a typed ProblemDetails response with the StatusCodePages middleware, pass `null` to the `TypedResults`
-helper method -- this sets the body to `null` which will trigger the middleware to add a ProblemDetails response body.
+To return a typed [ProblemDetails] response with the StatusCodePages middleware, pass `null` to the [TypedResults]
+helper method -- this sets the body to `null` which will trigger the middleware to add a [ProblemDetails] response body.
 
 Use a transformer to set the `headers`, `links`, or to add specification extensions to the response object.
+
+[OkTextPlain]: ./OkTextPlain.cs
+[OkImage]: ./OkImage.cs
 
 ### content
 
 You can create multiple `mediaTypeObject` entries in the `content` property of a response object
-by specifying all the media types in the `Produces` extension method on the endpoint.
+by specifying all the media types in the [Produces] extension method on the endpoint.
 However, each of these `mediaTypeObject` entries will have the same schema, so if you need different
 schemas for different media types, you will need to use a transformer.
 
 It is possible but currently a bit complicated to generate content entries for media types other than "application/json"
-from the return type of the route handler. To do this, you need to create a class that implements `IResult` and `IEndpointMetadataProvider`
-and make this class the return type of the route handler. There is an example of this in the [OkTextPlain] class in the
-project.
+from the return type of the route handler. To do this, you need to create a class that implements [IResult] and [IEndpointMetadataProvider]
+and make this class the return type of the route handler.
+There is an example of this in the [OkTextPlain] class in the examples project.
 
 Use a transformer to set the `example`, `examples`, `encoding`, or
 to add specification extensions to any `mediaTypeObject` within the `content` of the response.
@@ -407,14 +399,14 @@ to add specification extensions to any `mediaTypeObject` within the `content` of
 
 Schemas are generated without an `additionalProperties` assertion by default, which then applies the default of `true`.
 
-To generate a schema with a specific `additionalProperties` assertion, define the property or class as a `Dictionary<string, type>`.
+To generate a schema with a specific `additionalProperties` assertion, define the property or class as a Dictionary<string, type>.
 The key type for the dictionary should be `string`, and the schema for the value type will be the `additionalProperties` schema.
 
 There does not appear to be a way to create a schema that has both properties and `additionalProperties`.
 Defining a class that extends Dictionary and has named properties does not work -- its schema only has `additionalProperties`.
 <!-- https://github.com/dotnet/aspnetcore/issues/56707 -->
 
-The `JsonExtensionData` attribute also cannot be used to generate `additionalProperties` next to named properties,
+The [\[JsonExtensionData\]] attribute also cannot be used to generate `additionalProperties` next to named properties,
 because the value type of the dictionary must be object or JsonElement -- it cannot be a more restrictive type
 like string or int.
 In other words, `JsonExtensionData` only corresponds to `additionalProperties: true`, which is the default.
@@ -449,48 +441,67 @@ specification extensions using this property.
 ## Links to Docs on Learn
 
 - AspNetCore.Http
-  - [`Accepts`] extension method
-  - [`IBindableFromHttpContext`]
-  - [`IEndpointParameterMetadataProvider`]
-  - [`IFormFile`]
-  - [`Produces`] extension method
+  - [Accepts] extension method
+  - [IBindableFromHttpContext\<T\>]
+  - [IEndpointParameterMetadataProvider]
+  - [IFormFile]
+  - [Produces] extension method
   - [`ProducesProblem`] extension method
+
+[Accepts]: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.http.openapiroutehandlerbuilderextensions.accepts
+[IBindableFromHttpContext\<T\>]: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.http.ibindablefromhttpcontext-1
+[IEndpointParameterMetadataProvider]: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.http.metadata.iendpointparametermetadataprovider
+[IFormFile]: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.http.iformfile?view=aspnetcore-9.0
+[Produces]: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.http.openapiroutehandlerbuilderextensions.produces
+[`ProducesProblem`]: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.http.openapiroutehandlerbuilderextensions.producesproblem
+
 - AspNetCore.Mvc
-  - [`FromForm`]
+  - [FromForm] attribute
+  - [ProblemDetails]
+  - [ProducesResponseType]
+
+[FromForm]: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.fromformattribute
+[ProblemDetails]: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.problemdetails
+[ProducesResponseType]: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.producesresponsetypeattribute
+
 - AspNetCore.OpenApi
   - [DocumentTransformer]
   - [OperationTransformer]
-- System.ComponentModel
-  - [`Description`] attribute
-- System.Text.Json
-  - [JsonSerializerOptions]
-  - [`JsonPropertyName`]
 
-<!-- Links -->
-
-<!-- distinguish between attributes and extension methods by wrapping attributes in brackets, where needed -->
-
-<!-- AspNetCore.Http -->
-[`Accepts`]: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.http.openapiroutehandlerbuilderextensions.accepts
-[`IBindableFromHttpContext`]: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.http.ibindablefromhttpcontext-1
-[`IEndpointParameterMetadataProvider`]: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.http.metadata.iendpointparametermetadataprovider
-[`IFormFile`]: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.http.iformfile?view=aspnetcore-9.0
-[`Produces`]: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.http.openapiroutehandlerbuilderextensions.produces
-[`ProducesProblem`]: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.http.openapiroutehandlerbuilderextensions.producesproblem
-
-<!-- AspNetCore.Mvc -->
-[`FromForm`]: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.fromformattribute?view=aspnetcore-9.0
-[`ProblemDetails`]: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.problemdetails?view=aspnetcore-8.0
-
-<!-- AspNetCore.OpenApi-->
 [DocumentTransformer]: https://learn.microsoft.com/aspnet/core/fundamentals/minimal-apis/aspnetcore-openapi?view=aspnetcore-9.0#openapi-document-transformers
 [OperationTransformer]: https://learn.microsoft.com/aspnet/core/fundamentals/minimal-apis/aspnetcore-openapi?view=aspnetcore-9.
 0#use-operation-transformers
 
-<!-- System.ComponentModel -->
+- System.ComponentModel
+  - [\[AllowedValues\]] attribute
+  - [\[DefaultValue\]] attribute
+  - [\[Description\]] attribute
+  - [\[MaxLength\]] attribute
+  - [\[MinLength\]] attribute
+  - [\[Range\]] attribute
+  - [\[RegularExpression\]] attribute
+  - [\[Required\]] attribute
 
-[`Description`]: https://learn.microsoft.com/dotnet/api/system.componentmodel.descriptionattribute?view=net-8.0
+[\[AllowedValues\]]: https://learn.microsoft.com/dotnet/api/system.componentmodel.dataannotations.allowedvaluesattribute
+[\[DefaultValue\]]: https://learn.microsoft.com/dotnet/api/system.componentmodel.defaultvalueattribute
+[\[Description\]]: https://learn.microsoft.com/dotnet/api/system.componentmodel.descriptionattribute
+[\[MinLength\]]: https://learn.microsoft.com/dotnet/api/system.componentmodel.dataannotations.minlengthattribute
+[\[MaxLength\]]: https://learn.microsoft.com/dotnet/api/system.componentmodel.dataannotations.maxlengthattribute
+[\[Range\]]: https://learn.microsoft.com/dotnet/api/system.componentmodel.dataannotations.rangeattribute
+[\[RegularExpression\]]: https://learn.microsoft.com/dotnet/api/system.componentmodel.dataannotations.regularexpressionattribute
+[\[Required\]]: https://learn.microsoft.com/dotnet/api/system.componentmodel.dataannotations.requiredattribute
 
-<!-- System.Text.Json -->
-[JsonSerializerOptions]: https://docs.microsoft.com/dotnet/api/system.text.json.jsonserializeroptions?view=net-9.0
-[`JsonPropertyName`]: https://docs.microsoft.com/dotnet/api/system.text.json.serialization.jsonpropertynameattribute?view=net-9.0
+- System.Text.Json
+  - [\[JsonConverter\]] attribute
+  - [\[JsonExtensionData\]] attribute
+  - [\[JsonPropertyName\]] attribute
+  - [\[JsonStringEnumConverter\]] attribute
+  - [JsonSerializerOptions]
+    - [PropertyNamingPolicy]
+
+[\[JsonConverter\]]: https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonconverterattribute
+[\[JsonExtensionData\]]: https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonextensiondataattribute
+[\[JsonPropertyName\]]: https://docs.microsoft.com/dotnet/api/system.text.json.serialization.jsonpropertynameattribute
+[\[JsonStringEnumConverter\]]: https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonstringenumconverter
+[JsonSerializerOptions]: https://docs.microsoft.com/dotnet/api/system.text.json.jsonserializeroptions
+[PropertyNamingPolicy]: https://docs.microsoft.com/dotnet/api/system.text.json.jsonserializeroptions.propertynamingpolicy
