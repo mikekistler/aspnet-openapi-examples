@@ -337,12 +337,14 @@ on the handler using [`Results`]. For more information see the
 [`TypedResults`]: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.http.typedresults?view=aspnetcore-9.0
 [`Results`]: https://learn.microsoft.com/aspnet/core/fundamentals/minimal-apis/responses?view=aspnetcore-9.0#resultstresult1-tresultn
 
-Note that `Results` only supports from 2 to 6 different return types. Don't use `Results` with a single return type -- it will fail to compile. Likewise, if you try to specify more than 6 return types, it will fail to compile.
+Note that `Results` only supports from 2 to 6 different return types.
+Don't use `Results` with a single return type -- it will fail to compile.
+Likewise, if you try to specify more than 6 return types, it will fail to compile.
 
 When the route handler is asynchronous, the return type must have the `Task<>` wrapper.
 
-Only return types that implement `IEndpointMetadataProvider` will create a `responses` entry in the OpenAPI document.
-Here's a quick list of some of the `TypedResults` helper methods that produce a `responses` entry:
+Only return types that implement [IEndpointMetadataProvider] will create a `responses` entry in the OpenAPI document.
+Here's a quick list of some of the [TypedResults] helper methods that produce a `responses` entry:
 
 | TypedResults helper method | status code |
 | -------------------------- | ----------- |
