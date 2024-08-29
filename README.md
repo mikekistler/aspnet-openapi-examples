@@ -239,44 +239,41 @@ Use a [DocumentTransformer] or an [OperationTransformer] to set any of these pro
 
 ## Request Body Object
 
-If a route handler has a parameter that is explicitly or implicitly [FromBody], this is used
-to set the `requestBody` property of the operation. The `requestBody` is also set if the route
-handler has any parameters with the [FromForm] attribute.
-
-It is also possible to use the [Accepts]  extension method to define the request body in cases where
-the route handler does not define a `FromBody` or [FromForm] parameter but accesses the request body
-from the HTTPContext. Accepts can specify multiple content-types and content-type ranges, e.g. "image/*".
-Accepts adds a filter to the route handler that checks the content-type of incoming requests and rejects
-any request that does not match one of the specified content-types.
-
-Note that if you specify Accepts multiple times, only the last one will be used -- they are not combined.
-
-**DO NOT** use the [Accepts]  extension method on a route handler with [FromBody] or [FromForm] parameters.
-The metadata set for the parameters is consistent with the parameter binding logic of ASP.NET,
-so overriding this with Accepts can produce an OpenAPI document that is inconsistent with the actual
-behavior of the application.
+If a route handler has a parameter that is explicitly or implicitly [FromBody] or an explicit
+[FromForm] parameter, this is used to set the `requestBody` property of the operation.
 
 ### description
+
+If the [FromBody] or [FromForm] parameter has a [Description] attribute, this description
+is included in the requestBody in the generated OpenAPI document.
 
 Set the `description` field of the requestBody with a [\[Description\]] attribute on the [FormBody] parameter.
 
 ### required
 
-The `required` property of a `requestBody` object is set to `true` if the [FromBody] parameter
-is a non-nullable type.
-For a route handler with `[FromForm]` parameters, `required` is always set to `true` even if all
-the `[FromForm]` parameters are nullable, since this is required by ASP.NET Core.
-Otherwise the `required` property is omitted and defaults to `false`.
+If the [FromBody] parameter is non-nullable, the requestBody is required and will have its
+`required` property set to `true` in the generated OpenAPI document. Form bodies are always required.
 
 ### content
 
 `FromBody` parameters are "application/json" by default, and this support is built in to Minimal APIs.
-For non-json request bodies, the route handler can read and parse the request body directly
-from the HttpContext. In this case, use the [Accepts]  extension method to specify the allowed
-content types and the expected type of the request body.
-Another option for non-json request bodies is to define a custom type for the [FromBody] parameter
+
+To accept non-json request bodies you should define a custom type for the `FromBody` parameter
 that implements [IBindableFromHttpContext\<T\>] and [IEndpointParameterMetadataProvider].
 This allows the framework to bind the parameter from the request body in the HTTP context.
+For request bodies that are primitive types or sealed classes, you can create a class
+that wraps the actual request body and implements the necessary interfaces.
+
+The `Accepts` extension method could be used to specify the content type of the request body
+instead of implementing [IEndpointParameterMetadataProvider], but this is not the recommended approach
+as it separates the parameter metadata from the parameter binding logic.
+
+If the endpoint does not define a `FromBody` parameter, but instead consumes the request body
+from the `HttpContext` directly, use the `Accepts` extension method to specify the content type
+that the endpoint accepts. This is a common scenario for endpoints that process the request body
+as a stream.
+
+Note that if you specify Accepts multiple times, only the last one will be used -- they are not combined.
 
 #### Form bodies
 
