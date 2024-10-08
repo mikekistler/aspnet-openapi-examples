@@ -1,0 +1,629 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "DataTypes | v1",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/data-types": {
+      "post": {
+        "tags": [
+          "Data Types"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DataTypes"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DataTypes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/metadata": {
+      "post": {
+        "tags": [
+          "Metadata"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Metadata"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Metadata"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/more-metadata": {
+      "post": {
+        "tags": [
+          "More Metadata"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MoreMetadata"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MoreMetadata"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/enums": {
+      "post": {
+        "tags": [
+          "Enums"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Enums"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Enums"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/shape": {
+      "get": {
+        "tags": [
+          "Shapes"
+        ],
+        "parameters": [
+          {
+            "name": "type",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Shape"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/shape-type": {
+      "post": {
+        "tags": [
+          "Shapes"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Shape"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/squares": {
+      "get": {
+        "tags": [
+          "Shapes"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Square"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pets/{type}": {
+      "get": {
+        "tags": [
+          "Pets"
+        ],
+        "parameters": [
+          {
+            "name": "type",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pet"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "DataTypes": {
+        "type": "object",
+        "properties": {
+          "int": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "long": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "short": {
+            "type": "integer",
+            "format": "int16"
+          },
+          "byte": {
+            "type": "integer",
+            "format": "uint8"
+          },
+          "float": {
+            "type": "number",
+            "format": "float"
+          },
+          "double": {
+            "type": "number",
+            "format": "double"
+          },
+          "decimal": {
+            "type": "number",
+            "format": "double"
+          },
+          "bool": {
+            "type": "boolean"
+          },
+          "string": {
+            "type": "string"
+          },
+          "char": {
+            "maxLength": 1,
+            "minLength": 1,
+            "type": "string",
+            "format": "char"
+          },
+          "byteArray": {
+            "type": "string",
+            "format": "byte"
+          },
+          "dateTimeOffset": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "dateOnly": {
+            "type": "string",
+            "format": "date"
+          },
+          "timeOnly": {
+            "type": "string",
+            "format": "time"
+          },
+          "uri": {
+            "type": "string",
+            "format": "uri"
+          },
+          "uuid": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "object": { },
+          "dynamic": { }
+        }
+      },
+      "Enums": {
+        "type": "object",
+        "properties": {
+          "enumAsString": {
+            "enum": [
+              "Sunday",
+              "Monday",
+              "Tuesday",
+              "Wednesday",
+              "Thursday",
+              "Friday",
+              "Saturday"
+            ]
+          },
+          "enum": {
+            "type": "integer"
+          },
+          "allowedValues": {
+            "type": "string"
+          }
+        }
+      },
+      "Metadata": {
+        "required": [
+          "requiredAttribute"
+        ],
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string",
+            "description": "A description of the property"
+          },
+          "requiredAttribute": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "defaultValueAttribute": {
+            "type": "integer",
+            "format": "int32",
+            "default": 42
+          },
+          "intWithRange": {
+            "maximum": 100,
+            "minimum": 1,
+            "type": "integer",
+            "format": "int32"
+          },
+          "doubleWithRange": {
+            "maximum": 1,
+            "minimum": 0,
+            "type": "number",
+            "format": "double"
+          },
+          "stringWithMaxLength": {
+            "maxLength": 63,
+            "type": "string"
+          },
+          "stringWithMinLength": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "stringWithPattern": {
+            "pattern": "^[A-Za-z0-9-]*$",
+            "type": "string"
+          }
+        }
+      },
+      "MoreMetadata": {
+        "required": [
+          "requiredModifier"
+        ],
+        "type": "object",
+        "properties": {
+          "requiredModifier": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nonNullableRef": {
+            "type": "string"
+          },
+          "nonNullableValue": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nullableRef": {
+            "type": "string",
+            "nullable": true
+          },
+          "nullableValue": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "dictionary": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "Pet": {
+        "type": "object",
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/PetDog"
+          },
+          {
+            "$ref": "#/components/schemas/PetCat"
+          },
+          {
+            "$ref": "#/components/schemas/PetFish"
+          },
+          {
+            "$ref": "#/components/schemas/PetBase"
+          }
+        ]
+      },
+      "PetBase": {
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "age": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "PetCat": {
+        "required": [
+          "petType"
+        ],
+        "properties": {
+          "petType": {
+            "enum": [
+              "cat"
+            ],
+            "type": "string"
+          },
+          "declawed": {
+            "type": "boolean"
+          },
+          "name": {
+            "type": "string"
+          },
+          "age": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "PetDog": {
+        "required": [
+          "petType"
+        ],
+        "properties": {
+          "petType": {
+            "enum": [
+              "dog"
+            ],
+            "type": "string"
+          },
+          "breed": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "age": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "PetFish": {
+        "required": [
+          "petType"
+        ],
+        "properties": {
+          "petType": {
+            "enum": [
+              "fish"
+            ],
+            "type": "string"
+          },
+          "species": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "age": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "Shape": {
+        "required": [
+          "shapeType"
+        ],
+        "type": "object",
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/ShapeCircle"
+          },
+          {
+            "$ref": "#/components/schemas/ShapeSquare"
+          },
+          {
+            "$ref": "#/components/schemas/ShapeTriangle"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "shapeType",
+          "mapping": {
+            "circle": "#/components/schemas/ShapeCircle",
+            "square": "#/components/schemas/ShapeSquare",
+            "triangle": "#/components/schemas/ShapeTriangle"
+          }
+        }
+      },
+      "ShapeCircle": {
+        "properties": {
+          "shapeType": {
+            "enum": [
+              "circle"
+            ],
+            "type": "string"
+          },
+          "radius": {
+            "type": "number",
+            "format": "double"
+          },
+          "color": {
+            "type": "string"
+          },
+          "sides": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "ShapeSquare": {
+        "properties": {
+          "shapeType": {
+            "enum": [
+              "square"
+            ],
+            "type": "string"
+          },
+          "area": {
+            "type": "number",
+            "format": "double"
+          },
+          "color": {
+            "type": "string"
+          },
+          "sides": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "ShapeTriangle": {
+        "properties": {
+          "shapeType": {
+            "enum": [
+              "triangle"
+            ],
+            "type": "string"
+          },
+          "hypotenuse": {
+            "type": "number",
+            "format": "double"
+          },
+          "color": {
+            "type": "string"
+          },
+          "sides": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "Square": {
+        "type": "object",
+        "properties": {
+          "area": {
+            "type": "number",
+            "format": "double"
+          },
+          "color": {
+            "type": "string"
+          },
+          "sides": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Data Types"
+    },
+    {
+      "name": "Metadata"
+    },
+    {
+      "name": "More Metadata"
+    },
+    {
+      "name": "Enums"
+    },
+    {
+      "name": "Shapes"
+    },
+    {
+      "name": "Pets"
+    }
+  ]
+}
