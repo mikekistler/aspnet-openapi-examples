@@ -1,6 +1,30 @@
-@MinimalRequests_HostAddress = http://localhost:5110
+@HostAddress = http://localhost:5110
 
-GET {{MinimalRequests_HostAddress}}/weatherforecast/
-Accept: application/json
+# Json body
+POST {{HostAddress}}/json-body
+Content-Type: application/json
+
+{
+  "prop1": "this is prop1's value"
+}
 
 ###
+
+# foobarbaz+json body
+POST {{HostAddress}}/json-body
+Content-Type: application/foobarbaz+json
+
+{
+  "prop1": "foobarbaz+json body"
+}
+
+###
+
+POST {{HostAddress}}/todos/5
+Accept: application/json
+Content-Type: application/xml
+
+<Todo>
+  <Title>Mow the lawn</Title>
+  <Content>Mow the front and back lawns</Content>
+</Todo>

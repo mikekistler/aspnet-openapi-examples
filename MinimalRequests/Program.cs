@@ -26,5 +26,6 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.MapRequests();
+app.MapFormBodies();
 
 app.Run();
