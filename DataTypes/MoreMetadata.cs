@@ -28,6 +28,12 @@ public class Enums
     // The AllowedValues attribute does not add an `enum` to the generated schema.
     [AllowedValues("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday")]
     public string AllowedValues { get; set; }
+
+    // C# flag enums are represented as `type: integer` with no `enum` in the generated schema.
+    public FlagsEnum FlagsEnum { get; set; }
+
+    // Flag enums with a JsonConverter attribute are represented as `type: string` with an `enum` in the generated schema.
+    public FlagsEnumAsString FlagsEnumAsString { get; set; }
 }
 
 public enum DayOfTheWeek { Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday }
@@ -43,3 +49,9 @@ public enum DayOfTheWeekAsString
     Friday,
     Saturday
 }
+
+[Flags]
+public enum FlagsEnum { Value1 = 1, Value2 = 2, Value4 = 4, Value8 = 8 }
+
+[Flags, JsonConverter(typeof(JsonStringEnumConverter<FlagsEnumAsString>))]
+public enum FlagsEnumAsString { Value1 = 1, Value2 = 2, Value4 = 4, Value8 = 8 }

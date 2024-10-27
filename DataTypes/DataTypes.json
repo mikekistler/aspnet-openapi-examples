@@ -320,6 +320,12 @@
           },
           "allowedValues": {
             "type": "string"
+          },
+          "flagsEnum": {
+            "type": "integer"
+          },
+          "flagsEnumAsString": {
+            "type": "string"
           }
         }
       },
