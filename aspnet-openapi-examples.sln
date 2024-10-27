@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinimalRequests", "MinimalR
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ControllerRequests", "ControllerRequests\ControllerRequests.csproj", "{1CF3CE5C-FCB3-4B9E-8CBD-2BD1C96632D5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Attributes", "Attributes\Attributes.csproj", "{361F1262-0068-45FC-9DDC-AB0F02F66E46}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{1CF3CE5C-FCB3-4B9E-8CBD-2BD1C96632D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1CF3CE5C-FCB3-4B9E-8CBD-2BD1C96632D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1CF3CE5C-FCB3-4B9E-8CBD-2BD1C96632D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{361F1262-0068-45FC-9DDC-AB0F02F66E46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{361F1262-0068-45FC-9DDC-AB0F02F66E46}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{361F1262-0068-45FC-9DDC-AB0F02F66E46}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{361F1262-0068-45FC-9DDC-AB0F02F66E46}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
