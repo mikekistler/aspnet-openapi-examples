@@ -172,14 +172,14 @@
         }
       }
     },
-    "/pets/{pet-id}": {
+    "/pets/{id}": {
       "get": {
         "tags": [
           "Attributes"
         ],
         "parameters": [
           {
-            "name": "pet-id",
+            "name": "id",
             "in": "path",
             "required": true,
             "schema": {
