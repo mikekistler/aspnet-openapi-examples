@@ -1,6 +1,54 @@
-@Attributes_HostAddress = http://localhost:5133
+@HostAddress = http://localhost:5133
 
-GET {{Attributes_HostAddress}}/weatherforecast/
+GET {{HostAddress}}/user-agent/
 Accept: application/json
+User-Agent: HTTP file
+
+###
+
+GET {{HostAddress}}/version?api-version=1.0
+Accept: application/json
+
+###
+
+# Query parameters are case-insensitive
+
+GET {{HostAddress}}/version?Api-Version=v0.9
+Accept: application/json
+
+###
+
+POST {{HostAddress}}/from-form
+Content-Type: application/x-www-form-urlencoded
+
+name=John&age=30
+
+###
+
+# Form parameters are case-insensitive
+
+POST {{HostAddress}}/from-form
+Content-Type: application/x-www-form-urlencoded
+
+NaMe=Bill&aGe=16
+
+###
+
+GET {{HostAddress}}/from-route/the-id
+Accept: application/json
+
+###
+
+POST {{HostAddress}}/from-body
+Content-Type: application/json
+
+{
+  "name": "John",
+  "age": 30
+}
+
+###
+
+POST {{HostAddress}}/allow-empty-body
 
 ###

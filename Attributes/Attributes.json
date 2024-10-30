@@ -1,0 +1,345 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Attributes | v1",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/user-agent": {
+      "get": {
+        "tags": [
+          "Attributes"
+        ],
+        "parameters": [
+          {
+            "name": "User-Agent",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/version": {
+      "get": {
+        "tags": [
+          "Attributes"
+        ],
+        "parameters": [
+          {
+            "name": "api-version",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/from-form": {
+      "post": {
+        "tags": [
+          "Attributes"
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "name",
+                  "age"
+                ],
+                "type": "object",
+                "allOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "age": {
+                        "type": "integer",
+                        "format": "int32"
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "required": [
+                  "name",
+                  "age"
+                ],
+                "type": "object",
+                "allOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "age": {
+                        "type": "integer",
+                        "format": "int32"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnonymousTypeOfstringAndint"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/from-route/{id}": {
+      "get": {
+        "tags": [
+          "Attributes"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pets/{pet-id}": {
+      "get": {
+        "tags": [
+          "Attributes"
+        ],
+        "parameters": [
+          {
+            "name": "pet-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/from-body": {
+      "post": {
+        "tags": [
+          "Attributes"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Person"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Person"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/allow-empty-body": {
+      "post": {
+        "tags": [
+          "Attributes"
+        ],
+        "requestBody": {
+          "description": "An optional request body",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Body"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/from-services": {
+      "get": {
+        "tags": [
+          "Attributes"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IServiceProvider"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AnonymousTypeOfstringAndint": {
+        "required": [
+          "name",
+          "age"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "age": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "Body": {
+        "type": "object",
+        "properties": {
+          "prop1": {
+            "type": "string"
+          },
+          "prop2": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "prop3": {
+            "type": "boolean",
+            "nullable": true
+          }
+        }
+      },
+      "IServiceProvider": {
+        "type": "object"
+      },
+      "Person": {
+        "required": [
+          "name",
+          "age"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "age": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Attributes"
+    }
+  ]
+}
