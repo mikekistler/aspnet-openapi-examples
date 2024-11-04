@@ -1,6 +1,27 @@
-@ErrorHandling_HostAddress = http://localhost:5050
+@HostAddress = http://localhost:5050
 
-GET {{ErrorHandling_HostAddress}}/weatherforecast/
+# 400 response with problem details (application/problem+json)
+# becuase AddProblemDetails()
+
+GET {{HostAddress}}/requires-query-param
 Accept: application/json
 
 ###
+
+GET {{HostAddress}}/requires-path-param/1
+Accept: application/json
+
+###
+
+# 404 response with problem details (application/json)
+# Because TypedResults with empty body will fill in the problem details
+
+GET {{HostAddress}}/requires-path-param/100
+Accept: application/json
+
+###
+
+# 405 response with problem details (application/problem+json)
+
+POST {{HostAddress}}/requires-path-param/100
+Accept: application/json
