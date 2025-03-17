@@ -28,6 +28,12 @@ public class Metadata
     [MinLength(1)]
     public string StringWithMinLength { get; set; }
 
+    [MaxLength(100)]
+    public string[] ArrayWithMaxItems { get; set; }
+
+    [MinLength(1)]
+    public string[] ArrayWithMinItems { get; set; }
+
     [RegularExpression(@"^[A-Za-z0-9-]*$")]
     public string StringWithPattern { get; set; }
 }
