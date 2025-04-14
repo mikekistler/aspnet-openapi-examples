@@ -1,6 +1,6 @@
-@TransformerOrdering_HostAddress = http://localhost:5178
+@GadgetHostAddress = http://localhost:5178
 
-GET {{TransformerOrdering_HostAddress}}/weatherforecast/
+GET {{GadgetHostAddress}}/openapi/v1.json
 Accept: application/json
 
 ###

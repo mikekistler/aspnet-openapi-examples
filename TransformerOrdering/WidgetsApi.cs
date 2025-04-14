@@ -21,20 +21,21 @@ public static class WidgetsApi
     {
         var group = routes.MapGroup("/widgets");
 
-        group.MapGet("/", () => _widgets);
+        group.MapGet("/", () => _widgets)
+            .WithName("GetAllWidgets");
 
         group.MapGet("/{id}", (int id) =>
         {
             var found = _widgets.FirstOrDefault(w => w.Id == id);
             return found is not null ? Results.Ok(found) : Results.NotFound();
-        });
+        }).WithName("GetWidgetById");
 
         group.MapPost("/", (Widget widget) =>
         {
             widget.Id = _widgets.Count > 0 ? _widgets.Max(w => w.Id) + 1 : 1;
             _widgets.Add(widget);
             return Results.Created($"/api/widgets/{widget.Id}", widget);
-        });
+        }).WithName("CreateWidget");
 
         group.MapPut("/{id}", (int id, Widget updatedWidget) =>
         {
@@ -42,7 +43,7 @@ public static class WidgetsApi
             if (index == -1) return Results.NotFound();
             _widgets[index] = updatedWidget with { Id = id };
             return Results.Ok(_widgets[index]);
-        });
+        }).WithName("UpdateWidget");
 
         group.MapDelete("/{id}", (int id) =>
         {
@@ -50,6 +51,6 @@ public static class WidgetsApi
             if (found is null) return Results.NotFound();
             _widgets.Remove(found);
             return Results.NoContent();
-        });
+        }).WithName("DeleteWidget");
     }
 }

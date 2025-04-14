@@ -19,20 +19,21 @@ public static class GadgetsApi
     {
         var group = routes.MapGroup("/gadgets");
 
-        group.MapGet("/", () => _gadgets);
+        group.MapGet("/", () => _gadgets)
+            .WithName("GetAllGadgets");
 
         group.MapGet("/{id}", (int id) =>
         {
             var found = _gadgets.FirstOrDefault(w => w.Id == id);
             return found is not null ? Results.Ok(found) : Results.NotFound();
-        });
+        }).WithName("GetGadgetById");
 
         group.MapPost("/", (Gadget gadget) =>
         {
             gadget.Id = _gadgets.Count > 0 ? _gadgets.Max(w => w.Id) + 1 : 1;
             _gadgets.Add(gadget);
             return Results.Created($"/api/gadgets/{gadget.Id}", gadget);
-        });
+        }).WithName("CreateGadget");
 
         group.MapPut("/{id}", (int id, Gadget updatedGadget) =>
         {
@@ -40,7 +41,7 @@ public static class GadgetsApi
             if (index == -1) return Results.NotFound();
             _gadgets[index] = updatedGadget with { Id = id };
             return Results.Ok(_gadgets[index]);
-        });
+        }).WithName("UpdateGadget");
 
         group.MapDelete("/{id}", (int id) =>
         {
@@ -48,6 +49,6 @@ public static class GadgetsApi
             if (found is null) return Results.NotFound();
             _gadgets.Remove(found);
             return Results.NoContent();
-        });
+        }).WithName("DeleteGadget");
     }
 }
